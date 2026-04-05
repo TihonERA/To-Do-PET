@@ -12,7 +12,7 @@ class Tasks(Base):
 
     tasks_id: Mapped[intpk]
     user_id: Mapped[UUID] = mapped_column(
-        ForeignKey("user.user_id", ondelete="CASCADE"),
+        ForeignKey("users.user_id", ondelete="CASCADE"),
         index=True,
         nullable=False
     )
