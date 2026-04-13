@@ -2,7 +2,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import String, UUID, ForeignKey
 from datetime import datetime
 from typing import TYPE_CHECKING
-from base import intpk, created_at, Base
+from base import intpk, created_at, updated_at, Base
 
 if TYPE_CHECKING:
     from .user import User 
@@ -20,8 +20,8 @@ class Tasks(Base):
     description: Mapped[str] = mapped_column(String(500), nullable=True)
     priority: Mapped[int] = mapped_column(default=0)
     created: Mapped[created_at]
-    completed: Mapped[created_at | None]
+    completed: Mapped[updated_at | None]
     status: Mapped[bool] = mapped_column(default=False)
-    due_date: Mapped[datetime]
+    due_date: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
 
     user: Mapped["User"] = relationship(back_populates="tasks")
