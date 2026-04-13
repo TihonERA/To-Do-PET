@@ -13,16 +13,7 @@ class UserRepository:
         await self.db.close()
         return user
     
-    async def _get_user(self, column: str, argument: UUID | str) -> User | None:
-        stmt = select(User).where(getattr(User, column) == argument)
+    async def get_user(self, attribute: str, argument: UUID | str) -> User | None:
+        stmt = select(User).where(getattr(User, attribute) == argument)
         user = await self.db.execute(stmt)
         return user.scalar_one_or_none()
-    
-    async def get_user_byid(self, uuid: UUID) -> User | None:
-        return await self._get_user(column="user_id", argument=uuid)
-    
-    async def get_user_bylogin(self, f_login: str) -> User | None:
-        return await self._get_user(column="login", argument=f_login)
-    
-    async def get_user_byemail(self, f_email: str) -> User | None:
-        return await(self._get_user(column="email", argument=f_email))
