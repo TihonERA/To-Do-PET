@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import UUID, select, update, delete
 from models.user import User
 
 class UserRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
     
     async def create_user(self, f_login: str, f_hash_pass: str, f_email: str) -> User:
@@ -17,15 +17,15 @@ class UserRepository:
         user = await self.db.execute(stmt)
         return user.scalar_one_or_none()
     
-    async def update_user(self, attribute: str, olddata: UUID | str, newdata: str) -> bool:
-        stmt = (
-            update(User)
-            .where(getattr(User, attribute) == olddata)
-            .values({attribute: newdata})
-        )
-        result = await self.db.execute(stmt)
-        await self.db.commit()
-        return True if result.rowcount == 1 else False
+    # async def update_user(self, attribute: str, olddata: UUID | str, newdata: str) -> bool:
+    #     stmt = (
+    #         update(User)
+    #         .where(getattr(User, attribute) == olddata)
+    #         .values({attribute: newdata})
+    #     )
+    #     result = await self.db.execute(stmt)
+    #     await self.db.commit()
+    #     return True if result.rowcount == 1 else False
 
         
     async def delete_user(self, pk_uuid: UUID) -> bool:
