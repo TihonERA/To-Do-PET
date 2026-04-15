@@ -3,6 +3,7 @@ from sqlalchemy import UUID
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from email_validator import validate_email
+from core.security import password_hash
 
 class UserService:
     def __init__(self, user_repo: UserRepository):
@@ -42,3 +43,18 @@ class UserService:
         except IntegrityError:  
             await self.user_repo.db.rollback()
             raise HTTPException(409, "Login or email already taken")
+        
+    async def delete_account(self, uuid: UUID, password: str):
+        user = await self.user_repo.get_user("user_id", uuid)
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+        if password_hash.verify(password, user.hash_pass):
+            if await self.user_repo.delete_user(user.user_id):
+                return
+            else:
+                raise HTTPException(status_code=500, detail="Failed to delete account")
+        else:
+            raise HTTPException(status_code=400, detail="Invalid credentials")
