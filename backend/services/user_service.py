@@ -4,11 +4,14 @@ from sqlalchemy import UUID
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from email_validator import validate_email
-from core.security import password_hash
+from core.security import password_hash, verify_pass, get_pass_hash, DUMMY_HASH
 
 class UserService:
+
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
+        self.MIN_PASSWORD_LENGTH = 8
+        self.MAX_PASSWORD_LENGTH = 72
 
     async def get_user_by_id(self, user_id: UUID) -> User | None:
         return await self.user_repo.get_user("user_id", user_id)
@@ -53,6 +56,25 @@ class UserService:
         
         return user
         
+    async def change_password(self, user_id: UUID, old_password: str, password: str) -> User:
+        user = await self._get_user_or_raise(user_id)
+        if not verify_pass(old_password, user.hash_pass):
+            verify_pass(old_password, DUMMY_HASH)
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+        self._validate_pass(password, old_password)
+        new_pass_hash = get_pass_hash(password)
+        user.hash_pass = new_pass_hash
+        await self.user_repo.commit()
+        return user
+
+    def _validate_pass(self, password: str, old_password: str) -> None:
+        if password == old_password:
+            raise HTTPException(status_code=400, detail="New password must be different")
+        if len(password) < self.MIN_PASSWORD_LENGTH:
+            raise HTTPException(status=400, detail="Password must be at least 8 characters")
+        elif len(password) > self.MAX_PASSWORD_LENGTH:
+            raise HTTPException(400, "Password too long")
+
     async def _get_user_or_raise(self, user_id: UUID) -> User:
         user = await self.user_repo.get_user("user_id", user_id)
         if not user:
