@@ -36,3 +36,12 @@ class UserRepository:
         result = await self.db.execute(stmt)
         await self.db.commit()
         return True if result.rowcount == 1 else False
+    
+    async def commit(self) -> None:
+        await self.db.commit()
+    
+    async def refresh(self, instance: object) -> None:
+        await self.db.refresh(instance)
+
+    async def rollback(self) -> None:
+        await self.db.rollback()
