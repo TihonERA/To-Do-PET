@@ -10,6 +10,15 @@ class UserService:
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
 
+    async def get_user_by_id(self, user_id: UUID) -> User | None:
+        return await self.user_repo.get_user("user_id", user_id)
+    
+    async def get_user_by_login(self, login: str) -> User | None:
+        return await self.user_repo.get_user("login", login)
+    
+    async def get_user_by_email(self, email: str) -> User | None:
+        return await self.user_repo.get_user("email", email)
+
     async def update_profile(self, user_id: UUID,  new_login: str | None = None, new_email: str| None = None):
         if new_login is None and new_email is None:
             raise HTTPException(status_code=400, detail="Nothing to update")
@@ -25,12 +34,12 @@ class UserService:
             user.email = email
         
         try:
-            await self.user_repo.db.commit()
-            await self.user_repo.db.refresh(user)
+            await self.user_repo.commit()
+            await self.user_repo.refresh(user)
             return user
                 
         except IntegrityError:  
-            await self.user_repo.db.rollback()
+            await self.user_repo.rollback()
             raise HTTPException(409, "Login or email already taken")
         
     async def delete_account(self, user_id: UUID, password: str):
