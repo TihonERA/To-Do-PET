@@ -42,12 +42,13 @@ button{
     justify-content: center; 
     align-items: center; 
     flex-direction: column;
+    
 }
 
 .container{ 
     position: relative; 
     width: 450px; 
-    height: 650px; 
+    height: 430px; 
     display: flex; 
     justify-content: center; 
     align-items: center;
@@ -83,7 +84,6 @@ label{
     font-size: 1.3em; 
     font-family: monospace;
 }
-
 .open{
     position: relative;
     bottom: -30px; 
@@ -95,37 +95,12 @@ label{
     display: flex; 
     justify-content: center; 
     align-items: center;
+    font-size: 1.1em; 
     font-family: monospace;
-    font-size: 1.2em;
 }
 a{
     border-bottom: none; 
     outline: none;
     color: #457b9d;
     text-decoration: none;
-    font-family: monospace;
 }
-header{
-    height: 80px; 
-    width: 100%; 
-    background: #D8FCFF;
-    position: relative; 
-    display: flex; 
-    justify-content: left; 
-    align-items: left;
-    background-position: top;
-    top: -150px; 
-    box-shadow: 0cap 0cap 0.2cap black
-}
-.To{
-    position: relative; 
-    justify-content: left; 
-    align-items: left; 
-    display: flex;
-    flex-direction: column;
-    left: 100px;
-    font-family: monospace; 
-    font-size: 3em;
-}
-
-
