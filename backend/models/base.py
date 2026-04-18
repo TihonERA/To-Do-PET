@@ -9,13 +9,13 @@ created_at = Annotated[datetime, mapped_column(
     nullable=False
 )]
 
-updated_at = Annotated[
-        datetime,
-        mapped_column(
-            server_default=text("TIMEZONE('utc', now())"),
-            onupdate=datetime.now(timezone.utc)
-        )
-]
+# updated_at = Annotated[
+#         datetime,
+#         mapped_column(
+#             server_default=text("TIMEZONE('utc', now())"),
+#             onupdate=datetime.now(timezone.utc)
+#         )
+# ]
 
 str_200 = Annotated[str, 200]
 str_32 = Annotated[str, 32]
