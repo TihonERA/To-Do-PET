@@ -27,11 +27,42 @@ class TaskRepository:
         result = await self.db.execute(stmt)
         await self.db.commit()
         return result.scalar_one_or_none()
+    
+    async def get_all_by_user(self, 
+            user_id: UUID,
+            skip: int = 0,
+            limit: int = 100,
+            sort_by: str = "created",
+            sort_desc: bool = True,
+            status: bool | None = None,
+            priority: int | None = None
+        ) -> list[Tasks]:
+        stmt = (
+            select(Tasks)
+            .where(Tasks.user_id == user_id)
+        )
+
+        if status is not None:
+            stmt = stmt.where(Tasks.status == status)
+
+        if priority is not None:
+            stmt = stmt.where(Tasks.priority == priority)
+
+        if sort_desc:
+            stmt = stmt.order_by(getattr(Tasks, sort_by)).desc()
+        else:
+            stmt = stmt.order_by(getattr(Tasks, sort_by))   
+
+        stmt = stmt.offset(skip).limit(limit)
+
+        result = await self.db.execute(stmt)
+        return result.scalar().all()
+
 
     async def update_task(self, 
-        task_id: int, 
-        attribute: str,
-        newvalue: int | str | datetime
+            task_id: int, 
+            attribute: str,
+            newvalue: int | str | datetime
         ) -> bool:
         stmt = (
             update(Tasks)
