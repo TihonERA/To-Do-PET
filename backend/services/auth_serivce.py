@@ -1,22 +1,20 @@
-from repositories.user_repo import UserRepository, User
+from repositories.user_repo import User
+from services.user_service import UserService
 from core.security import get_pass_hash, verify_pass, DUMMY_HASH, create_access_token
 from fastapi import HTTPException
 from core.config import settings
 import jwt
 from email_validator import validate_email
+from utils.validators import ValidationError, validate_pass
 
 class AuthService:
-    def __init__(self, user_repo: UserRepository):
-        self.user_repo = user_repo
+    def __init__(self, user_serv: UserService):
+        self.user_serv = user_serv
 
     async def register_user(self, login: str, email: str, password: str) -> User:
-        validated_email = validate_email(email)
-        if await self.user_repo.get_user("email", validated_email.normalized):
-            raise HTTPException(status_code=409, detail="User with this email already exists")
-        if await self.user_repo.get_user("login", login):
-            raise HTTPException(status_code=409, detail="User with this login already exists")
+        validated_email = self.user_serv.validate_new_user(login, email)
         hash_pass = get_pass_hash(password)
-        return await self.user_repo.create_user(login, hash_pass, validated_email.normalized)
+        return await self.user_repo.create_user(login, hash_pass, validated_email)
          
     async def login_user(self, login_or_email: str, password: str) -> dict:
         if "@" in login_or_email and "." in login_or_email:
