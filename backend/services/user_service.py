@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from email_validator import validate_email
 from core.security import password_hash, verify_pass, get_pass_hash, DUMMY_HASH
+from utils.validators import AlreadyTaken, NotFound, ValidationError, validate_pass
 
 class UserService:
 
@@ -14,17 +15,17 @@ class UserService:
         self.MAX_PASSWORD_LENGTH = 72
 
     async def get_user_by_id(self, user_id: UUID) -> User | None:
-        return await self.user_repo.get_user("user_id", user_id)
+        return await self._get_user_or_raise(user_id)
     
     async def get_user_by_login(self, login: str) -> User | None:
-        return await self.user_repo.get_user("login", login)
+        return await self._get_user_or_raise(login, "login")
     
     async def get_user_by_email(self, email: str) -> User | None:
-        return await self.user_repo.get_user("email", email)
+        return await self._get_user_or_raise(email, "email")
 
     async def update_profile(self, user_id: UUID,  new_login: str | None = None, new_email: str| None = None):
         if new_login is None and new_email is None:
-            raise HTTPException(status_code=400, detail="Nothing to update")
+            raise NotFound(detail="Nothing to update")
         
         user = await self._get_user_or_raise(user_id)
 
@@ -43,13 +44,13 @@ class UserService:
                 
         except IntegrityError:  
             await self.user_repo.rollback()
-            raise HTTPException(409, "Login or email already taken")
+            raise AlreadyTaken(detail="Login or email already taken")
         
     async def delete_account(self, user_id: UUID, password: str):
         user = await self._get_user_or_raise(user_id)
 
         if not password_hash.verify(password, user.hash_pass):
-            raise HTTPException(status_code=400, detail="Invalid credentials")
+            raise ValidationError(detail="Invalid credentials")
         
         if not await self.user_repo.delete_user(user_id):
             raise HTTPException(status_code=500, detail="Failed to delete account")
@@ -60,33 +61,34 @@ class UserService:
         user = await self._get_user_or_raise(user_id)
         if not verify_pass(old_password, user.hash_pass):
             verify_pass(old_password, DUMMY_HASH)
-            raise HTTPException(status_code=400, detail="Invalid credentials")
-        self._validate_pass(password, old_password)
+            raise ValidationError(detail="Invalid credentials")
+        self._validate_new_pass(password, old_password)
         new_pass_hash = get_pass_hash(password)
         user.hash_pass = new_pass_hash
         await self.user_repo.commit()
         return user
 
-    def _validate_pass(self, password: str, old_password: str) -> None:
-        if password == old_password:
-            raise HTTPException(status_code=400, detail="New password must be different")
-        if len(password) < self.MIN_PASSWORD_LENGTH:
-            raise HTTPException(status=400, detail="Password must be at least 8 characters")
-        elif len(password) > self.MAX_PASSWORD_LENGTH:
-            raise HTTPException(400, "Password too long")
+    async def validate_new_user(self, login: str, email: str) -> str:
+        await self._validate_login(login)  
+        return await self._validate_email(email)
 
-    async def _get_user_or_raise(self, user_id: UUID) -> User:
-        user = await self.user_repo.get_user("user_id", user_id)
+    def _validate_new_pass(self, password: str, old_password: str) -> None:
+        if password == old_password:
+            raise ValidationError(detail="New password must be different")
+        validate_pass(password)
+
+    async def _get_user_or_raise(self, identifier: UUID, attribute: str = "user_id") -> User:
+        user = await self.user_repo.get_user(getattr(User, attribute), identifier)
         if not user:
-            raise HTTPException(status_code=404, detail="User not found")
+            raise NotFound(detail="User not found")
         return user
     
     async def _validate_login(self, login: str) -> None:
         if await self.user_repo.get_user("login", login):
-            raise HTTPException(status_code=409, detail="Login already taken")
+            raise AlreadyTaken(detail="Login already taken")
     
     async def _validate_email(self, email: str) -> str:
         validated_email = validate_email(email)
         if await self.user_repo.get_user("email", validated_email.normalized):
-            raise HTTPException(status_code=409, detail="Email already taken")
+            raise AlreadyTaken(detail="Email already taken")
         return validated_email.normalized
