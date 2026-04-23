@@ -1,0 +1,46 @@
+body{
+    height: 100vh;
+    background: #42AAFF;
+    margin: 0; 
+    padding: 0;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+}
+header{
+    height: 80px; 
+    width: 100%; 
+    background: #D8FCFF;
+    position: relative; 
+    display: flex; 
+    justify-content: left; 
+    align-items: left;
+    background-position: top;
+    top: -150px; 
+    box-shadow: 0cap 0cap 0.2cap black
+}
+.container{
+    height: auto ; 
+    width: 350px; 
+    background: whitesmoke;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column;
+    border-radius: 5px;  
+}
+input{ 
+    background: transparent;
+    outline: none; 
+    border: none;
+}
+.name{
+    border-bottom: 2px solid black;
+    width: 347px
+     
+}
+.description{
+    border-bottom: 2px solid black;
+    width: 347px;
+}
