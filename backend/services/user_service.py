@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from email_validator import validate_email
 from core.security import password_hash, verify_pass, get_pass_hash, DUMMY_HASH
-from utils.validators import AlreadyTaken, NotFound, ValidationError, validate_pass
+from utils.validators import AlreadyTaken, NotFound, ValidationError, InternalServerError, validate_pass
 
 class UserService:
 
@@ -53,7 +53,7 @@ class UserService:
             raise ValidationError(detail="Invalid credentials")
         
         if not await self.user_repo.delete_user(user_id):
-            raise HTTPException(status_code=500, detail="Failed to delete account")
+            raise InternalServerError(detail="Failed to delete account", status_code=500)
         
         return user
         
@@ -84,9 +84,11 @@ class UserService:
         return user
     
     async def _validate_login(self, login: str) -> None:
+        if not login.strip():
+            raise ValidationError(detail="Login cant be empty")
         if await self.user_repo.get_user("login", login):
             raise AlreadyTaken(detail="Login already taken")
-    
+        
     async def _validate_email(self, email: str) -> str:
         validated_email = validate_email(email)
         if await self.user_repo.get_user("email", validated_email.normalized):
