@@ -23,6 +23,10 @@ class InvalidCredentialsError(DomainError):
     def __init__(self):
         super().__init__(detail="Invalid credentials", status_code=401)
 
+class InternalServerError(DomainError):
+    def __init__(self, detail: str = "Internal server error"):
+        super().__init__(detail=detail, status_code=500)
+
 def validate_pass(password: str):
     if len(password) < 16:
         raise ValidationError(detail="Password must be at least 16 characters")
