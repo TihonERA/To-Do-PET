@@ -14,7 +14,7 @@ async def get_current_user(
     ) -> User:
     return current_user
 
-@router.patch("/update_profile", response_model=UserResponse)
+@router.patch("/users/update_profile", response_model=UserResponse)
 async def update_profile(
     new_login: Annotated[str | None, Form()],
     new_email: Annotated[str | None, Form()],
@@ -32,7 +32,7 @@ async def update_profile(
     except AlreadyTaken as e:
         raise HTTPException(status_code=409, detail=e.detail)
     
-@router.patch("/update_password")
+@router.patch("/users/update_password")
 async def update_password(
     old_password: Annotated[str, Form()],
     new_password: Annotated[str, Form()],
@@ -51,7 +51,7 @@ async def update_password(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=e.detail)
     
-@router.delete("/delete_account")
+@router.delete("/users/delete_account")
 async def delete_account(
     current_user: Annotated[User, Depends(get_current_user)],
     password: Annotated[str, Form()],
