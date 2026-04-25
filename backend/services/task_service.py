@@ -2,7 +2,7 @@ from repositories.task_repo import TaskRepository
 from sqlalchemy import UUID
 from models.task import Tasks
 from datetime import datetime, timezone
-from fastapi import HTTPException
+from utils.validators import NotFound, ValidationError, AccessDeniedError
 
 class TaskService:
     def __init__(self, task_repo: TaskRepository):
@@ -33,7 +33,7 @@ class TaskService:
             f_due_date=due_date
         )
 
-        await self.db.refresh(task)
+        await self.task_repo.refresh(task)
         return task
     
     async def get_task(self, 
@@ -57,10 +57,7 @@ class TaskService:
         ) -> list[Tasks]:
 
         if sort_by not in self.ALLOWED_SORT_FIELDS:
-            raise HTTPException(
-                400, 
-                f"Invalid sort field. Allowed: {self.ALLOWED_SORT_FIELDS}"
-            )
+            raise ValidationError(detail=f"Invalid sort field. Allowed: {self.ALLOWED_SORT_FIELDS}")
         self._validate_pagination(skip, limit)
         self._validate_priority(priority)
 
@@ -74,49 +71,37 @@ class TaskService:
             priority=priority
         )
         
-    async def set_completed(self,
+    async def update_task(self,
             user_id: UUID,
-            task_id: int
+            task_id: int,
+            new_name: str | None,
+            new_description: str | None,
+            new_due_date: datetime | None,
+            set_completed: bool | None,
+            switch_status: bool | None
         ) -> Tasks:
-        return await self._set_time(
-            user_id,
-            task_id
-        )
+        task: Tasks = await self._get_task_or_raise(task_id)
+        self._validate_owner(task, user_id)
 
-    async def switch_status(self, 
-            user_id: UUID,
-            task_id: int
-        ) -> Tasks:
-        return await self._switch_status(
-            user_id,
-            task_id
-        )
+        if new_name:
+            self._validate_name(new_name)
+            task.name = new_name.strip()
 
-    async def update_name(self, 
-            user_id: UUID, 
-            task_id: int, 
-            new_name: str
-        ) -> Tasks:
-        return await self._update_field(
-            user_id=user_id,
-            task_id=task_id,
-            field_name="name",
-            value=new_name,
-            validator=self._validate_name
-        )
-    
-    async def update_description(self, 
-            user_id: UUID, 
-            task_id: int, 
-            new_desc: str
-        ) -> Tasks:
-        return await self._update_field(
-            user_id=user_id, 
-            task_id=task_id, 
-            field_name="description", 
-            value=new_desc, 
-            validator=self._validate_desc
-        )
+        if new_description:
+            self._validate_desc(new_description)
+            task.description = new_description.strip()
+
+        if new_due_date:
+            task.due_date = self._validate_due_date(new_due_date) 
+
+        if set_completed:
+            task = self._set_time(task)
+
+        if switch_status:
+            task = await self._switch_status(task)
+        
+        await self.task_repo.commit()
+        return task
 
     async def delete_task(self,
             user_id: UUID,
@@ -133,72 +118,46 @@ class TaskService:
         if description is None:
             return None
         if len(description) > 500:
-            raise HTTPException(status_code=400, detail="Description too long")
+            raise ValidationError(detail="Description too long")
         
     def _validate_owner(self, task: Tasks | None, user_id: UUID) -> None:
         if not task:
-            raise HTTPException(status_code=404, detail="Task not found")
+            raise NotFound(detail="Task not found")
         
         if task.user_id != user_id:
-            raise HTTPException(status_code=403, detail="Access denied")
+            raise AccessDeniedError(detail="Access denied", status_code=403, )
         
     def _validate_name(self, name: str) -> None:
         if not name.strip():
-            raise HTTPException(status_code=400, detail="Name cannot be empty")
+            raise ValidationError(detail="Name cannot be empty")
         if len(name) > 255:
-            raise HTTPException(status_code=400, detail="Name too long")
+            raise ValidationError(detail="Name too long")
         
     async def _get_task_or_raise(self, task_id: int) -> Tasks:
         task = await self.task_repo.get_task("task_id", task_id)
         if not task:
-            raise HTTPException(status_code=404, detail="Task not found")
+            raise NotFound(detail="Task not found")
         return task
     
     def _validate_pagination(self, skip: int, limit: int) -> None:
         if skip < 0:
-            raise HTTPException(400, "Skip cannot be negative")
+            raise ValidationError(detail="Skip cannot be negative")
         if limit < self.MIN_LIMIT or limit > self.MAX_LIMIT:
-            raise HTTPException(400, f"Limit must be between {self.MIN_LIMIT} and {self.MAX_LIMIT}")
+            raise ValidationError(detail=f"Limit must be between {self.MIN_LIMIT} and {self.MAX_LIMIT}")
         
     def _validate_priority(self, priority: int) -> None:
         if priority not in self.list_priority:
-            raise HTTPException(status_code=400, detail="This type of priority doesn't exist")
-
-    async def _update_field(self, user_id: UUID, task_id: int, field_name: str, value: str, validator: callable | None) -> Tasks:
-        validator(value)
-
-        task = await self._get_task_or_raise(task_id)
-        
-        self._validate_owner(task, user_id)
-        
-        if getattr(task, field_name) == value:
-            return task
-        
-        setattr(task, field_name, value)
-        await self.task_repo.commit()
-        return task
+            raise ValidationError(detail="This type of priority doesn't exist")
     
-    async def _switch_status(self, user_id: UUID, task_id: int):
-        task = await self._get_task_or_raise(task_id)
-
-        self._validate_owner(task, user_id)
-
+    def _switch_status(self, task: Tasks):
         status = task.status
-
         task.status = True if status == False else False
-        await self.task_repo.commit()
         return task
     
-    async def _set_time(self,
-            user_id: UUID,
-            task_id: int
+    def _set_time(self,
+            task: Tasks
         ) -> Tasks:
-        task = await self._get_task_or_raise(task_id)
-
-        self._validate_owner(task, user_id)
-
         task.completed = datetime.now(timezone.utc)
-        await self.task_repo.commit()
         return task
     
     def _validate_due_date(self, due_date: datetime | str | None) -> datetime | None:
@@ -209,14 +168,14 @@ class TaskService:
             try:
                 due_date = datetime.fromisoformat(due_date.replace('Z', '+00:00'))
             except ValueError:
-                raise HTTPException(400, "Invalid date format. Use ISO 8601")
+                raise ValidationError(detail="Invalid date format. Use ISO 8601")
             
         now = datetime.now(timezone.utc)
         if due_date < now:
-            raise HTTPException(400, "Due date cannot be in the past")
+            raise ValidationError(detail="Due date cannot be in the past")
         
         max_future = now.replace(year=now.year + 1)
         if due_date > max_future:
-            raise HTTPException(400, "Due date cannot be more than 1 years in the future")
+            raise ValidationError(detail="Due date cannot be more than 1 years in the future")
         
         return due_date
