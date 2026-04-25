@@ -29,7 +29,6 @@ header{
 .create{
     height: auto;
     width: 130px;
-    border: 2px solid white;
     color: white;
     border-radius: 5px;
     padding: 5px 5px;
@@ -38,7 +37,6 @@ header{
     position: relative; 
     left: 60px; 
     top: 80px
-    
 }
 .container{
     width: 250px; 
@@ -54,7 +52,6 @@ header{
 .fil{
     height: auto;
     width: 120px;
-    border: 2px solid white;
     color: white;
     border-radius: 5px; 
     padding-bottom: 5px; 
@@ -76,34 +73,16 @@ header{
     left: 125px;
 }
 .create:hover{
-    transform:scale(1.1);
-    transition: 0.4s;
+    background: #C1C1C1;
     cursor: pointer;
 }
 .fil:hover{
-    transform: scale(1.1); 
-    transition: 0.4s; 
+    background: #C1C1C1;
     cursor: pointer;
-}
-.themes{
-    height: auto;
-    width: 115px;
-    border: 2px solid white;
-    color: white;
-    border-radius: 5px; 
-    padding-bottom: 5px; 
-    padding-top: 5px; 
-    padding-left: 5px;
-    padding-right: 5px;
-    font-size: 1.1em;
-    position: relative; 
-    left: 60px; 
-    top: 130px
 }
 .sett{
     height: auto;
-    width: 85px;
-    border: 2px solid white;
+    width: 100px;
     color: white;
     border-radius: 5px;
     padding-right: 5px; 
@@ -112,21 +91,15 @@ header{
     padding-bottom: 5px;
     font-size: 1.1em;
     position: relative; 
-    left: 80px; 
-    top: 150px;
+    left: 61px; 
+    top: 120px;
 }
 .sett:hover{
-    transform: scale(1.1); 
-    transition: 0.4s; 
-    cursor: pointer;
-}
-.themes:hover{
-    transform: scale(1.1); 
-    transition: 0.4s; 
+    background: #C1C1C1;
     cursor: pointer;
 }
 .create-container{
-    display: none;
+    display: flex;
     position: relative; 
     height: 120px; 
     width: 500px; 
@@ -137,17 +110,19 @@ header{
     padding: 6px 6px;
     align-items: center;
     justify-content: center;
-    display: flex;
     border: 1px solid slategrey;
+    transform: translateY(-44.5%) scale(0);
+    transition: .3s ease-in-out 
 }
 .name{
     border: none; 
     outline: none; 
-    width: 480px;
+    width: 470px;
     font-family: monospace;
-    position: relative; 
-    top: 1px
-    
+    position: absolute; 
+    top: 10px;
+    cursor: pointer;
+    background:none;
 }
 .description{
     border: none; 
@@ -155,27 +130,86 @@ header{
     width: 480px;
     font-family: monospace;
     font-size: 1.3em;
-    position: relative; 
-    top: -3px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-wrap: balance;
+    cursor: pointer;
+    background: none;
+    bottom: 10px;
+    scrollbar-width:none
 }
 .time{
     border: none;
     outline: none;
     color: slategrey;
-    position: relative;
-    top: 10px;
-    right: 31px;
+    position: absolute;
+    top: 95px;
+    left: 15px;
+    cursor: pointer;
+    background: none;
 }
 .to-do-time{
     color: slategrey; 
     font-family: monospace; 
     font-size: 1em;
-    position: relative; 
-    top: -8px;
-    left: 3px;
+    position: absolute; 
+    top: 80px;
+    left: 17px;
     pointer-events: none;
     
 }
-.create.container{
-    display:block;
+.create-container.active{
+    transform: translateY(0%) scale(100%)
+}
+.offwind{
+    position: absolute; 
+    left: 490px;
+    top: 1px;
+    cursor: pointer;
+}
+select{
+    outline: none;
+    color: slategrey;
+    border: none;
+    position: absolute;
+    top: 95px; 
+    left: 200px;
+    cursor: pointer;
+}
+.H{
+    color: Red;
+}
+.M{
+    color: orange;
+}
+.L{
+    color: green;
+}
+.add{
+    position: absolute; 
+    left: 350px;
+    color: white; 
+    background-color: #2A75A8; 
+    font-size: 1em; 
+    font-family: monospace;
+    padding: 4px 4px;
+    border-radius: 7px;
+    top: 92px;
+    cursor: pointer;
+}
+.add-icon{
+    position: absolute;
+    top: 97px;
+    left: 31px;
+}
+.filter-icon{
+    position: absolute; 
+    top: 172px; 
+    left: 33px;
+}
+.sett-icon{
+    position: absolute;
+    top: 235px;
+    left: 33px;
 }

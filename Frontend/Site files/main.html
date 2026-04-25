@@ -1,0 +1,47 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Главная Страница</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header>
+        <div class="To-Do">
+            <h2 class="To">To-Do</h2>           
+        </div>
+    </header>
+    <div class="container">
+    <svg  class="add-icon" viewBox="0 0 24 24" width="28" height="28" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+    <p class="create">Создать заметку</p>
+    <svg class="filter-icon" viewBox="0 0 24 24" width="26" height="26" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+    <p class="fil">Отфильтровать </p>
+    <svg class="sett-icon" viewBox="0 0 24 24" width="27" height="27" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <p class="sett">Настройки</p>
+    </div>
+    <hr class="line">
+    <div class="create-container">
+        <form>
+            <input placeholder="Название заметки" class='name'>
+            <p>
+            <textarea placeholder="Описание заметки" class="description"></textarea> 
+            </p>
+            <p class="to-do-time-container">
+            <label class="to-do-time" type="date">Срок</label>
+            <input type="datetime-local" class="time" Срок>
+            <select name="priority" value="Приоритет">
+                <option value="pri">Приоритет</option>
+                <option value="High" class="H">Высокая</option>
+                <option value="Mid" class="M">Средняя</option>
+                <option value="Low" Class="L">Низкая</option>
+            </select>
+            <a class="add">Добавить заметку</a>
+            </p>
+        </form>
+        <div class="offwind">&#10005;</div>
+    </div>
+<script src="main.js" defer></script>    
+</body>
+</html>

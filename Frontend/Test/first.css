@@ -1,46 +1,27 @@
-body{
-    height: 100vh;
-    background: #42AAFF;
-    margin: 0; 
-    padding: 0;
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    flex-direction: column;
+.modal {
+  display: none;
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
 }
-header{
-    height: 80px; 
-    width: 100%; 
-    background: #D8FCFF;
-    position: relative; 
-    display: flex; 
-    justify-content: left; 
-    align-items: left;
-    background-position: top;
-    top: -150px; 
-    box-shadow: 0cap 0cap 0.2cap black
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  width: 300px;
 }
-.container{
-    height: auto ; 
-    width: 350px; 
-    background: whitesmoke;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    flex-direction: column;
-    border-radius: 5px;  
+.note-item {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-input{ 
-    background: transparent;
-    outline: none; 
-    border: none;
-}
-.name{
-    border-bottom: 2px solid black;
-    width: 347px
-     
-}
-.description{
-    border-bottom: 2px solid black;
-    width: 347px;
+button {
+  margin: 8px 4px;
 }
