@@ -1,11 +1,10 @@
-from repositories.user_repo import UserRepository
-from models.user import User
+from backend.repositories.user_repo import UserRepository
+from backend.models.user import User
 from sqlalchemy import UUID
 from sqlalchemy.exc import IntegrityError
-from fastapi import HTTPException
 from email_validator import validate_email
-from core.security import password_hash, verify_pass, get_pass_hash, DUMMY_HASH
-from utils.validators import AlreadyTaken, NotFound, ValidationError, InternalServerError, validate_pass
+from backend.core.security import password_hash, verify_pass, get_pass_hash, DUMMY_HASH
+from backend.utils.validators import AlreadyTaken, NotFound, ValidationError, InternalServerError, validate_pass
 
 class UserService:
 

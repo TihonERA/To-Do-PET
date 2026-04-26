@@ -2,7 +2,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import String, UUID, ForeignKey
 from datetime import datetime
 from typing import TYPE_CHECKING
-from base import intpk, created_at, Base
+from backend.models.base import intpk, created_at, Base
 
 if TYPE_CHECKING:
     from .user import User 

@@ -1,12 +1,13 @@
-from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy import text, String, UUID
+from sqlalchemy.orm import mapped_column, Mapped
+import uuid
+from sqlalchemy import text, String
 from uuid import uuid4
-from base import str_32, str_200, created_at, Base
+from backend.models.base import str_32, str_200, created_at, Base
 
 class User(Base):
     __tablename__ = "users"
 
-    user_id: Mapped[UUID] = mapped_column(
+    user_id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True,
         default=uuid4,
         server_default=text("gen_random_uuid()")

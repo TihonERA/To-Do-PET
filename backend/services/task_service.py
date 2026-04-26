@@ -1,8 +1,8 @@
-from repositories.task_repo import TaskRepository
+from backend.repositories.task_repo import TaskRepository
 from sqlalchemy import UUID
-from models.task import Tasks
+from backend.models.task import Tasks
 from datetime import datetime, timezone
-from utils.validators import NotFound, ValidationError, AccessDeniedError
+from backend.utils.validators import NotFound, ValidationError, AccessDeniedError
 
 class TaskService:
     def __init__(self, task_repo: TaskRepository):

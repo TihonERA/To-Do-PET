@@ -1,12 +1,14 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
-from services.user_service import UserService
-from services.auth_serivce import AuthService
-from repositories.user_repo import UserRepository
-from core.config import settings
-from core.database import get_db
-from utils.validators import NotFound
+from backend.services.user_service import UserService
+from backend.services.auth_serivce import AuthService
+from backend.services.task_service import TaskService
+from backend.repositories.task_repo import TaskRepository
+from backend.repositories.user_repo import UserRepository
+from backend.core.config import settings
+from backend.core.database import get_db
+from backend.utils.validators import NotFound
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 
@@ -15,8 +17,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def get_user_repo(db: AsyncSession = Depends(get_db)):
     return UserRepository(db=db)
 
+def get_task_repo(db: Annotated[AsyncSession, Depends(get_db)]):
+    return TaskRepository(db=db)
+
 def get_user_service(user_repo: UserRepository = Depends(get_user_repo)):
     return UserService(user_repo=user_repo)
+
+def get_task_service(task_repo: Annotated[TaskRepository, Depends(get_task_repo)]):
+    return TaskService(task_repo=task_repo)
 
 def get_user_auth_service(user_repo: Annotated[UserRepository, Depends(get_user_repo)]):
     return AuthService(user_repo=user_repo)

@@ -1,12 +1,11 @@
-from repositories.user_repo import User
-from services.user_service import UserService
-from core.security import get_pass_hash, verify_pass, DUMMY_HASH, create_access_token
+from backend.repositories.user_repo import User
+from backend.services.user_service import UserService
+from backend.core.security import get_pass_hash, verify_pass, DUMMY_HASH, create_access_token
 from fastapi import HTTPException
-from core.config import settings
+from backend.core.config import settings
 import jwt
-from schemas.user import Token
-from email_validator import validate_email
-from utils.validators import ValidationError, NotFound, validate_pass, InvalidCredentialsError
+from backend.schemas.user import Token
+from backend.utils.validators import NotFound, validate_pass, InvalidCredentialsError
 
 class AuthService:
     def __init__(self, user_serv: UserService):

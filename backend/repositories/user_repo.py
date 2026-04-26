@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import UUID, select, update, delete
-from models.user import User
+from backend.models.user import User
 
 class UserRepository:
     def __init__(self, db: AsyncSession):

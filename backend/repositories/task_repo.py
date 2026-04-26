@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import UUID, select, update, delete
-from models.task import Tasks
+from backend.models.task import Tasks
 from datetime import datetime
 
 class TaskRepository:

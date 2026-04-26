@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Form
 from typing import Annotated
-from services.auth_serivce import AuthService
-from utils.validators import AlreadyTaken, InvalidCredentialsError
-from schemas.user import Token
-from deps import get_user_auth_service
+from backend.services.auth_serivce import AuthService
+from backend.utils.validators import AlreadyTaken, InvalidCredentialsError
+from backend.schemas.user import Token
+from backend.api.deps import get_user_auth_service
 
 
-router = APIRouter()
+router = APIRouter(tags=["Authentication"])
 
 @router.post("/register", response_model=Token)
 async def register(
@@ -29,5 +29,6 @@ async def login(
     ) -> Token:
     try:
         token = await user_auth.login_user(login_or_email, password)
+        return token
     except InvalidCredentialsError as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)

@@ -1,17 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, Form
 from typing import Annotated
-from models.user import User
-from services.user_service import UserService
-from utils.validators import NotFound, AlreadyTaken, ValidationError, InternalServerError
-from schemas.user import UserResponse
-from deps import get_current_user, get_user_service
+from backend.models.user import User
+from backend.services.user_service import UserService
+from backend.utils.validators import NotFound, AlreadyTaken, ValidationError, InternalServerError
+from backend.schemas.user import UserResponse
+from backend.api.deps import get_current_user, get_user_service
 
-router = APIRouter()
+router = APIRouter(tags=["User"])
 
 @router.get("/users/me", response_model=UserResponse)
 async def get_current_user(
         current_user: Annotated[User, Depends(get_current_user)]    
-    ) -> User:
+    ):
     return current_user
 
 @router.patch("/users/update_profile", response_model=UserResponse)
@@ -56,7 +56,7 @@ async def delete_account(
     current_user: Annotated[User, Depends(get_current_user)],
     password: Annotated[str, Form()],
     user_service: Annotated[UserService, Depends(get_user_service)]
-    ) -> User:
+    ):
     try:
         user_service.delete_account(
             user_id=current_user.user_id,
