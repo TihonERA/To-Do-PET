@@ -26,8 +26,8 @@ def get_user_service(user_repo: UserRepository = Depends(get_user_repo)):
 def get_task_service(task_repo: Annotated[TaskRepository, Depends(get_task_repo)]):
     return TaskService(task_repo=task_repo)
 
-def get_user_auth_service(user_repo: Annotated[UserRepository, Depends(get_user_repo)]):
-    return AuthService(user_repo=user_repo)
+def get_user_auth_service(user_serv: Annotated[UserService, Depends(get_user_service)]):
+    return AuthService(user_serv=user_serv)
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], user_service: Annotated[UserService, Depends(get_user_service)]):
     try:
