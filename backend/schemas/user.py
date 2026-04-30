@@ -6,25 +6,27 @@ class UserRegister(BaseModel):
     email: EmailStr = Field(description="Почта")
     login: str = Field(min_length=3, max_length=50, description="Логин")
     password: str = Field(min_length=16, max_length=72, description="Пароль")
-    class Config:
-        schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
-                "email": "pytest@gmail.com",
-                "login": "pytest_user",
-                "password": "pytestpassword15"
+                "email": "user@example.com",
+                "login": "super_user_123",
+                "password": "SecureP@ssw0rd!2024"
             }
         }
+    }
 
 class UserLogin(BaseModel):
     login_or_email: str | EmailStr = Field(description="Принимает логин или пароль для авторизации пользователя")
     password: str = Field(min_length=16, max_length=72, description="пароль")
-    class Config:
-        schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
-                "login_or_email": "pytest_user",
-                "password": "pytestpassword15"
+                "login_or_email": "super_user_123",
+                "password": "SecureP@ssw0rd!2024"
             }
         }
+    }
 
 class UserUpdateProfile(BaseModel):
     new_login: str | None = Field(
@@ -48,8 +50,8 @@ class UserResponse(BaseModel):
     email: str = Field(description="Электронная почта")
     created: datetime = Field(description="Дата и время регистрации")
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "user_id": "123e4567-e89b-12d3-a456-426614174000",
                 "login": "awesome_user",
@@ -57,6 +59,7 @@ class UserResponse(BaseModel):
                 "created": "2023-10-27T10:30:00Z"
             }
         }
+    }
 
 class Token(BaseModel):
     access_token: str
