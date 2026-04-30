@@ -33,16 +33,16 @@ async def get_all_task(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=e.detail)
     
-@router.get("/tasks/{task_id}")
+@router.get("/tasks/{tasks_id}")
 async def get_task(
-    task_id: Annotated[int, Path()],
+    tasks_id: Annotated[int, Path()],
     current_user: Annotated[User, Depends(get_current_user)],
     task_service: Annotated[TaskService, Depends(get_task_service)]
     ):
     try:
         return await task_service.get_task(
             user_id=current_user.user_id,
-            task_id=task_id
+            task_id=tasks_id
         )
     except NotFound as e:
         raise HTTPException(status_code=404, detail=e.detail)
@@ -98,7 +98,7 @@ async def update_description(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=e.detail)
     
-@router.delete("tasks/{task_id}/delete")
+@router.delete("/tasks/{task_id}/delete")
 async def delete_task(
     current_user: Annotated[User, Depends(get_current_user)],
     task_id: int,
