@@ -49,14 +49,14 @@ class TaskRepository:
             stmt = stmt.where(Tasks.priority == priority)
 
         if sort_desc:
-            stmt = stmt.order_by(getattr(Tasks, sort_by)).desc()
+            stmt = stmt.order_by(getattr(Tasks, sort_by).desc())
         else:
-            stmt = stmt.order_by(getattr(Tasks, sort_by))   
+            stmt = stmt.order_by(getattr(Tasks, sort_by).asc())
 
         stmt = stmt.offset(skip).limit(limit)
 
         result = await self.db.execute(stmt)
-        return result.scalar().all()
+        return result.scalars().all()
 
 
     async def update_task(self, 
