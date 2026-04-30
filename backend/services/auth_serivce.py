@@ -1,9 +1,5 @@
-from backend.repositories.user_repo import User
 from backend.services.user_service import UserService
 from backend.core.security import get_pass_hash, verify_pass, DUMMY_HASH, create_access_token
-from fastapi import HTTPException
-from backend.core.config import settings
-import jwt
 from backend.schemas.user import Token
 from backend.utils.validators import NotFound, validate_pass, InvalidCredentialsError
 
@@ -18,12 +14,12 @@ class AuthService:
         ) -> Token:
         validate_pass(password)
 
-        validated_email = self.user_serv.validate_new_user(login, email)
+        validated_email = await self.user_serv.validate_new_user(login, email)
 
         hash_pass = get_pass_hash(password)
-        user = await self.user_repo.create_user(login, hash_pass, validated_email)
+        user = await self.user_serv.create_user(login, hash_pass, validated_email)
 
-        access_token = create_access_token(data={"sub": user.login})
+        access_token = create_access_token(user_data={"sub": user.login})
         return Token(access_token=access_token, token_type="bearer")
         
          
@@ -41,21 +37,9 @@ class AuthService:
         if not verify_pass(password, user.hash_pass):
             raise InvalidCredentialsError()
         
-        access_token = create_access_token(data={"sub": user.login})
+        access_token = create_access_token(user_data={"sub": user.login})
         return Token(access_token=access_token, token_type="bearer")
     
-    async def get_current_user(self, token: str) -> User:
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        except jwt.PyJWTError:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        login = payload.get("sub")
-        if login is None:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
-        user = await self.user_repo.get_user("login", login)
-        if user is None:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
-        return user
 
 
             

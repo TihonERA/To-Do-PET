@@ -7,14 +7,16 @@ from backend.core.security import password_hash, verify_pass, get_pass_hash, DUM
 from backend.utils.validators import AlreadyTaken, NotFound, ValidationError, InternalServerError, validate_pass
 
 class UserService:
-
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
         self.MIN_PASSWORD_LENGTH = 8
         self.MAX_PASSWORD_LENGTH = 72
 
+    async def create_user(self, login: str, hash_pass: str, email: str):
+        return await self.user_repo.create_user(login, hash_pass, email)
+
     async def get_user_by_id(self, user_id: UUID) -> User | None:
-        return await self._get_user_or_raise(user_id)
+        return await self._get_user_or_raise(user_id, "user_id")
     
     async def get_user_by_login(self, login: str) -> User | None:
         return await self._get_user_or_raise(login, "login")
@@ -23,18 +25,24 @@ class UserService:
         return await self._get_user_or_raise(email, "email")
 
     async def update_profile(self, user_id: UUID,  new_login: str | None = None, new_email: str| None = None):
-        if new_login is None and new_email is None:
-            raise NotFound(detail="Nothing to update")
-        
         user = await self._get_user_or_raise(user_id)
+    
+        has_changes = False
+        
+        if new_login is not None:
+            if user.login != new_login:
+                await self._validate_login(new_login)
+                user.login = new_login
+                has_changes = True
+           
+        if new_email is not None:
+            if user.email != new_email:
+                email = await self._validate_email(new_email)
+                user.email = email
+                has_changes = True
 
-        if new_login and user.login != new_login:
-            await self._validate_login(new_login)
-            user.login = new_login
-
-        if new_email and user.email != new_email:
-            email =  await self._validate_email(new_email)
-            user.email = email
+        if not has_changes:
+            raise NotFound(detail="Nothing to update. New data is same as current.")
         
         try:
             await self.user_repo.commit()
@@ -77,7 +85,7 @@ class UserService:
         validate_pass(password)
 
     async def _get_user_or_raise(self, identifier: UUID, attribute: str = "user_id") -> User:
-        user = await self.user_repo.get_user(getattr(User, attribute), identifier)
+        user = await self.user_repo.get_user(attribute, identifier)
         if not user:
             raise NotFound(detail="User not found")
         return user

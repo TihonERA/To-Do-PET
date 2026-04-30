@@ -7,6 +7,7 @@ from backend.utils.validators import NotFound, ValidationError, AccessDeniedErro
 class TaskService:
     def __init__(self, task_repo: TaskRepository):
         self.task_repo = task_repo
+        self.db = task_repo.db
         self.MAX_NAME = 255
         self.MAX_DESC = 500
         self.list_priority = [0, 1, 2]
@@ -42,6 +43,7 @@ class TaskService:
         ) -> Tasks:
         task = await self._get_task_or_raise(task_id)
 
+        await self.db.refresh(task)
         self._validate_owner(task, user_id)
 
         return task
@@ -98,7 +100,7 @@ class TaskService:
             task = self._set_time(task)
 
         if switch_status:
-            task = await self._switch_status(task)
+            task = self._switch_status(task)
         
         await self.task_repo.commit()
         return task
@@ -111,7 +113,7 @@ class TaskService:
 
         self._validate_owner(task, user_id)
 
-        await self.task_repo.delete_task("task_id", task_id)
+        await self.task_repo.delete_task("tasks_id", task_id)
         return task
     
     def _validate_desc(self, description: str | None) -> None:
@@ -134,7 +136,7 @@ class TaskService:
             raise ValidationError(detail="Name too long")
         
     async def _get_task_or_raise(self, task_id: int) -> Tasks:
-        task = await self.task_repo.get_task("task_id", task_id)
+        task = await self.task_repo.get_task("tasks_id", task_id)
         if not task:
             raise NotFound(detail="Task not found")
         return task
@@ -146,6 +148,8 @@ class TaskService:
             raise ValidationError(detail=f"Limit must be between {self.MIN_LIMIT} and {self.MAX_LIMIT}")
         
     def _validate_priority(self, priority: int) -> None:
+        if priority is None:
+            return
         if priority not in self.list_priority:
             raise ValidationError(detail="This type of priority doesn't exist")
     
@@ -154,28 +158,31 @@ class TaskService:
         task.status = True if status == False else False
         return task
     
-    def _set_time(self,
-            task: Tasks
-        ) -> Tasks:
-        task.completed = datetime.now(timezone.utc)
+    def _set_time(self, task: Tasks) -> Tasks:
+        task.completed = datetime.now(timezone.utc).replace(tzinfo=None)
         return task
     
+
     def _validate_due_date(self, due_date: datetime | str | None) -> datetime | None:
         if due_date is None:
             return None
-        
+
         if isinstance(due_date, str):
             try:
                 due_date = datetime.fromisoformat(due_date.replace('Z', '+00:00'))
             except ValueError:
                 raise ValidationError(detail="Invalid date format. Use ISO 8601")
-            
+        
         now = datetime.now(timezone.utc)
-        if due_date < now:
+        
+        # Приводим к UTC для сравнения
+        if due_date.tzinfo is None:
+            due_date_utc = due_date.replace(tzinfo=timezone.utc)
+        else:
+            due_date_utc = due_date.astimezone(timezone.utc)
+        
+        if due_date_utc < now:
             raise ValidationError(detail="Due date cannot be in the past")
         
-        max_future = now.replace(year=now.year + 1)
-        if due_date > max_future:
-            raise ValidationError(detail="Due date cannot be more than 1 years in the future")
-        
-        return due_date
+        # Возвращаем datetime БЕЗ временной зоны для сохранения в БД
+        return due_date_utc.replace(tzinfo=None)
