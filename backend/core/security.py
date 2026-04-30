@@ -5,8 +5,6 @@ from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
 from backend.core.config import settings
 
-
-
 password_hash = PasswordHash.recommended()
 DUMMY_HASH = password_hash.hash("dummy_password_for_timing_protection")
 
