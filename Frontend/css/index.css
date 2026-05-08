@@ -13,7 +13,7 @@ header{
     justify-content: left; 
     align-items: left;
     background-position: top; 
-    box-shadow: 0cap 0cap 0.3cap black
+    box-shadow: 0 0 0.3cap black;
 }
 .To{
     position: relative; 
@@ -40,7 +40,7 @@ header{
 }
 .container{
     width: 250px; 
-    height: 985px; 
+    height: 945px; 
     background: #2A75A8;
     position: absolute;
     box-shadow: 0cap 0cap 0.3cap black;
@@ -69,7 +69,7 @@ header{
     height: 1px;
     position: relative; 
     top: 650px;
-    width: 1734px;
+    width: 1735px;
     left: 125px;
 }
 .create:hover{
@@ -104,7 +104,7 @@ header{
     height: 120px; 
     width: 500px; 
     background-color: white;
-    left: 500px; 
+    left: 750px; 
     top: 300px;
     border-radius: 15px;
     padding: 6px 6px;
@@ -112,7 +112,8 @@ header{
     justify-content: center;
     border: 1px solid slategrey;
     transform: translateY(-44.5%) scale(0);
-    transition: .3s ease-in-out 
+    transition: .3s ease-in-out; 
+    z-index: 3;
 }
 .name{
     border: none; 
@@ -157,7 +158,6 @@ header{
     top: 80px;
     left: 17px;
     pointer-events: none;
-    
 }
 .create-container.active{
     transform: translateY(0%) scale(100%)
@@ -212,4 +212,168 @@ select{
     position: absolute;
     top: 235px;
     left: 33px;
+}
+.mini-container {
+    position: relative;
+    left: 300px;
+    top: -150px;          /* активные заметки теперь снизу */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: calc(100% - 320px);
+}
+.note-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    width: 280px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    position: relative;
+}
+.note-description {
+    margin: 8px 0;
+    color: #333;
+    font-size: 1.2em;
+    line-height: 1.4;
+    cursor: pointer;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+.note-description:hover {
+    background-color: #f0f0f0;
+} 
+.note-card small {
+    display: block;
+    color: gray;
+    font-size: 0.8em;
+    margin: 5px 0; 
+}
+.priority {
+    display: inline-block;
+    padding: 2px 8px; 
+    border-radius: 20px; 
+    font-size: 0.75em; 
+    font-weight: bold; 
+}
+.priority.High {
+    background: #ffcccc;
+    color: red; 
+}
+.priority.Mid {
+    background:#ffe0b3;
+    color: orange;
+}
+.priority.Low {
+    background: #ccffcc;
+    color: green;
+}
+.edit-note, .delete-note {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1em;
+    margin-right: 7px;
+    font-family: monospace;
+}
+.edit-note:hover { 
+    color:blue;
+}
+.delete-note:hover {
+    color: red; 
+}
+.modal-desc {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.modal-desc-content {
+    background: white;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+.modal-desc-content h3 {
+    margin-top: 0;
+    font-family: monospace;
+}
+.modal-desc-content textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 15px;
+}
+.modal-buttons button {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: monospace;
+}
+.save-desc-btn {
+    background: #2A75A8;
+             color: white;
+}
+.cancel-desc-btn {
+    background: #ccc;
+}
+.edit-note, .delete-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;            
+}
+.edit-note svg, .delete-note svg {
+    order: 1;            
+}
+
+        /* стили чекбокса и зачеркивания */
+.note-card.completed .note-description,
+.note-card.completed strong,
+.note-card.completed small,
+.note-card.completed .priority {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+.complete-checkbox {
+    position: absolute;
+    top: 127px;
+    left: 265px;
+    transform: scale(1.3);
+    cursor: pointer;
+    z-index: 2;
+}
+
+        /* контейнер для выполненых заметок */
+.completed-container {
+    position: relative;
+    left: 300px;
+    top: 550px;          /* снизу линии */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: calc(100% - 320px);
+    margin-bottom: 20px;
 }
