@@ -1,379 +1,841 @@
 body{
-    height: 100vh;
-    background: #42AAFF;
-    margin: 0; 
-    padding: 0; 
-}
-header{
-    height: 80px; 
-    width: 250px; 
-    background: #2A75A8;
-    position: relative; 
-    display: flex; 
-    justify-content: left; 
-    align-items: left;
-    background-position: top; 
-    box-shadow: 0 0 0.3cap black;
-}
-.To{
-    position: relative; 
-    justify-content: left; 
-    align-items: left; 
-    display: flex;
-    flex-direction: column;
-    left: 70px;
-    font-family: monospace; 
-    font-size: 3em;
-    top: -15px;
-}
-.create{
-    height: auto;
-    width: 130px;
-    color: white;
-    border-radius: 5px;
-    padding: 5px 5px;
-    padding-right: 2px;
-    font-size: 1.1em;
-    position: relative; 
-    left: 60px; 
-    top: 80px
-}
-.container{
-    width: 250px; 
-    height: 945px; 
-    background: #2A75A8;
-    position: absolute;
-    box-shadow: 0cap 0cap 0.3cap black;
-    padding: 0; 
-    margin: 0;
-    margin-right: 0; 
-    gap: 0;
-}
-.fil{
-    height: auto;
-    width: 120px;
-    color: white;
-    border-radius: 5px; 
-    padding-bottom: 5px; 
-    padding-top: 5px; 
-    padding-left: 5px;
-    padding-right: 5px;
-    font-size: 1.1em;
-    position: relative; 
-    left: 60px; 
-    top: 105px
-}
-.line{
-    border: none;
-    background-color: black;
-    height: 1px;
-    position: relative; 
-    top: 650px;
-    width: 1735px;
-    left: 125px;
-}
-.create:hover{
-    background: #C1C1C1;
-    cursor: pointer;
-}
-.fil:hover{
-    background: #C1C1C1;
-    cursor: pointer;
-}
-.sett{
-    height: auto;
-    width: 100px;
-    color: white;
-    border-radius: 5px;
-    padding-right: 5px; 
-    padding-left: 5px; 
-    padding-top: 5px;
-    padding-bottom: 5px;
-    font-size: 1.1em;
-    position: relative; 
-    left: 61px; 
-    top: 120px;
-}
-.sett:hover{
-    background: #C1C1C1;
-    cursor: pointer;
-}
-.create-container{
-    display: flex;
-    position: relative; 
-    height: 120px; 
-    width: 500px; 
-    background-color: white;
-    left: 750px; 
-    top: 300px;
-    border-radius: 15px;
-    padding: 6px 6px;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid slategrey;
-    transform: translateY(-44.5%) scale(0);
-    transition: .3s ease-in-out; 
-    z-index: 3;
-}
-.name{
-    border: none; 
-    outline: none; 
-    width: 470px;
-    font-family: monospace;
-    position: absolute; 
-    top: 10px;
-    cursor: pointer;
-    background:none;
-}
-.description{
-    border: none; 
-    outline: none;
-    width: 480px;
-    font-family: monospace;
-    font-size: 1.3em;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: auto;
-    text-wrap: balance;
-    cursor: pointer;
-    background: none;
-    bottom: 10px;
-    scrollbar-width:none
-}
-.time{
-    border: none;
-    outline: none;
-    color: slategrey;
-    position: absolute;
-    top: 95px;
-    left: 15px;
-    cursor: pointer;
-    background: none;
-}
-.to-do-time{
-    color: slategrey; 
-    font-family: monospace; 
-    font-size: 1em;
-    position: absolute; 
-    top: 80px;
-    left: 17px;
-    pointer-events: none;
-}
-.create-container.active{
-    transform: translateY(0%) scale(100%)
-}
-.offwind{
-    position: absolute; 
-    left: 490px;
-    top: 1px;
-    cursor: pointer;
-}
-select{
-    outline: none;
-    color: slategrey;
-    border: none;
-    position: absolute;
-    top: 95px; 
-    left: 200px;
-    cursor: pointer;
-}
-.H{
-    color: Red;
-}
-.M{
-    color: orange;
-}
-.L{
-    color: green;
-}
-.add{
-    position: absolute; 
-    left: 350px;
-    color: white; 
-    background-color: #2A75A8; 
-    font-size: 1em; 
-    font-family: monospace;
-    padding: 4px 4px;
-    border-radius: 7px;
-    top: 92px;
-    cursor: pointer;
-}
-.add-icon{
-    position: absolute;
-    top: 97px;
-    left: 31px;
-}
-.filter-icon{
-    position: absolute; 
-    top: 172px; 
-    left: 33px;
-}
-.sett-icon{
-    position: absolute;
-    top: 235px;
-    left: 33px;
-}
-.mini-container {
-    position: relative;
-    left: 300px;
-    top: -150px;          /* активные заметки теперь снизу */
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: calc(100% - 320px);
-}
-.note-card {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    width: 280px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    position: relative;
-}
-.note-description {
-    margin: 8px 0;
-    color: #333;
-    font-size: 1.2em;
-    line-height: 1.4;
-    cursor: pointer;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word;
-}
-.note-description:hover {
-    background-color: #f0f0f0;
-} 
-.note-card small {
-    display: block;
-    color: gray;
-    font-size: 0.8em;
-    margin: 5px 0; 
-}
-.priority {
-    display: inline-block;
-    padding: 2px 8px; 
-    border-radius: 20px; 
-    font-size: 0.75em; 
-    font-weight: bold; 
-}
-.priority.High {
-    background: #ffcccc;
-    color: red; 
-}
-.priority.Mid {
-    background:#ffe0b3;
-    color: orange;
-}
-.priority.Low {
-    background: #ccffcc;
-    color: green;
-}
-.edit-note, .delete-note {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1em;
-    margin-right: 7px;
-    font-family: monospace;
-}
-.edit-note:hover { 
-    color:blue;
-}
-.delete-note:hover {
-    color: red; 
-}
-.modal-desc {
-    display: none;
-    position: fixed;
-    z-index: 10;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-}
-.modal-desc-content {
-    background: white;
-    width: 500px;
-    max-width: 90%;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
-.modal-desc-content h3 {
-    margin-top: 0;
-    font-family: monospace;
-}
-.modal-desc-content textarea {
-    width: 100%;
-    height: 200px;
-    padding: 10px;
-    font-family: monospace;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    resize: vertical;
-    box-sizing: border-box;
-}
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 15px;
-}
-.modal-buttons button {
-    padding: 6px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: monospace;
-}
-.save-desc-btn {
-    background: #2A75A8;
+            height: 100vh;
+            background: #42AAFF;
+            margin: 0; 
+            padding: 0; 
+        }
+        header{
+            height: 80px; 
+            width: 250px; 
+            background: #2A75A8;
+            position: relative; 
+            display: flex; 
+            justify-content: left; 
+            align-items: left;
+            background-position: top; 
+            box-shadow: 0 0 0.3cap black;
+        }
+        .To{
+            position: relative; 
+            justify-content: left; 
+            align-items: left; 
+            display: flex;
+            flex-direction: column;
+            left: 70px;
+            font-family: monospace; 
+            font-size: 3em;
+            top: -15px;
+        }
+        .create{
+            height: auto;
+            width: 130px;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 5px;
+            padding-right: 2px;
+            font-size: 1.1em;
+            position: relative; 
+            left: 60px; 
+            top: 80px
+         }
+        .container{
+            width: 250px; 
+            height: 985px; 
+            background: #2A75A8;
+            position: absolute;
+            box-shadow: 0 0 0.3cap black;
+            padding: 0; 
+            margin: 0;
+            margin-right: 0; 
+            gap: 0;
+        }
+        .fil{
+            height: auto;
+            width: 135px;
+            color: white;
+            border-radius: 5px; 
+            padding-bottom: 5px; 
+            padding-top: 5px; 
+            padding-left: 5px;
+            padding-right: 5px;
+            font-size: 1.1em;
+            position: absolute; 
+            left: 60px; 
+            top: 155px
+        }
+        .line{
+            border: none;
+            background-color: black;
+            height: 1px;
+            position: relative; 
+            top: 650px;
+            width: 1735px;
+            left: 125px;
+        }
+        .create:hover{
+            background: #C1C1C1;
+            cursor: pointer;
+        }
+        .fil:hover{
+            background: #C1C1C1;
+            cursor: pointer;
+        }
+        .sett{
+            height: auto;
+            width: 88px;
+            color: white;
+            border-radius: 5px;
+            padding-right: 1px; 
+            padding-left: 5px; 
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 1.1em;
+            position: absolute; 
+            left: 61px; 
+            top: 218px;
+        }
+        .sett:hover{
+            background: #C1C1C1;
+            cursor: pointer;
+        }
+        .create-container{
+            display: flex;
+            position: relative; 
+            height: 120px; 
+            width: 500px; 
+            background-color: white;
+            left: 750px; 
+            top: 300px;
+            border-radius: 15px;
+            padding: 6px 6px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid slategrey;
+            transform: translateY(-44.5%) scale(0);
+            transition: 0.3s ease-in-out; 
+            z-index: 3;
+        }
+        .name{
+            border: none; 
+            outline: none; 
+            width: 470px;
+            font-family: monospace;
+            position: absolute; 
+            top: 10px;
+            cursor: pointer;
+            background:none;
+        }
+        .description{
+            border: none; 
+            outline: none;
+            width: 480px;
+            font-family: monospace;
+            font-size: 1.3em;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            text-wrap: balance;
+            cursor: pointer;
+            background: none;
+            bottom: 10px;
+            scrollbar-width:none
+        }
+        .time{
+            border: none;
+            outline: none;
+            color: slategrey;
+            position: absolute;
+            top: 95px;
+            left: 15px;
+            cursor: pointer;
+            background: none;
+        }
+        .to-do-time{
+            color: slategrey; 
+            font-family: monospace; 
+            font-size: 1em;
+            position: absolute; 
+            top: 80px;
+            left: 17px;
+            pointer-events: none;
+        }
+        .create-container.active{
+            transform: translateY(0%) scale(1)
+        }
+        .offwind{
+            position: absolute; 
+            left: 490px;
+            top: 1px;
+            cursor: pointer;
+        }
+        select{
+            outline: none;
+            color: slategrey;
+            border: none;
+            position: absolute;
+            top: 95px; 
+            left: 200px;
+            cursor: pointer;
+        }
+        .H{
+            color: Red;
+        }
+        .M{
+            color: orange;
+        }
+        .L{
+            color: green;
+        }
+        .add{
+            position: absolute; 
+            left: 350px;
+            color: white; 
+            background-color: #2A75A8; 
+            font-size: 1em; 
+            font-family: monospace;
+            padding: 4px 4px;
+            border-radius: 7px;
+            top: 92px;
+            cursor: pointer;
+        }
+        .add-icon{
+            position: absolute;
+            top: 97px;
+            left: 31px;
+        }
+        .filter-icon{
+            position: absolute; 
+            top: 172px; 
+            left: 33px;
+        }
+        .sett-icon{
+            position: absolute;
+            top: 235px;
+            left: 33px;
+        }
+        .mini-container {
+            position: relative;
+            left: 300px;
+            top: -150px;          /* активные заметки теперь снизу */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: calc(100% - 320px);
+        }
+        .note-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            width: 280px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .note-description {
+            margin: 8px 0;
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.4;
+            cursor: pointer;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+        .note-description:hover {
+            background-color: #f0f0f0;
+        }
+        .note-card small {
+            display: block;
+            color: gray;
+            font-size: 0.8em;
+            margin: 5px 0; 
+        }
+        .priority {
+            display: inline-block;
+            padding: 2px 8px; 
+            border-radius: 20px; 
+            font-size: 0.75em; 
+            font-weight: bold; 
+        }
+        .priority.High {
+            background: #ffcccc;
+            color: red; 
+        }
+        .priority.Mid {
+            background:#ffe0b3;
+            color: orange;
+        }
+        .priority.Low {
+            background: #ccffcc;
+            color: green;
+        }
+        .edit-note, .delete-note {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 7px;
+            font-family: monospace;
+        }
+        .edit-note:hover { 
+            color:blue;
+        }
+        .delete-note:hover {
+            color: red; 
+        }
+        .modal-desc {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-desc-content {
+            background: white;
+            width: 500px;
+            max-width: 90%;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .modal-desc-content h3 {
+            margin-top: 0;
+            font-family: monospace;
+        }
+        .modal-desc-content textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .modal-buttons button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        .save-desc-btn {
+            background: #2A75A8;
              color: white;
-}
-.cancel-desc-btn {
-    background: #ccc;
-}
-.edit-note, .delete-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;            
-}
-.edit-note svg, .delete-note svg {
-    order: 1;            
-}
+        }
+        .cancel-desc-btn {
+            background: #ccc;
+        }
+        .edit-note, .delete-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;            
+        }
+        .edit-note svg, .delete-note svg {
+            order: 1;            
+        }
+        .note-card.completed .note-description,
+        .note-card.completed strong,
+        .note-card.completed small,
+        .note-card.completed .priority {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .complete-checkbox {
+            position: absolute;
+            top: 127px;
+            left: 265px;
+            transform: scale(1.3);
+            cursor: pointer;
+            z-index: 2;
+        }
+        .completed-container {
+            position: relative;
+            left: 300px;
+            top: 550px;          
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: calc(100% - 320px);
+            margin-bottom: 20px;
+        }
+        .settings-container{
+            width: 350px; 
+            height: 400px; 
+            background-color: white;
+            position: relative; 
+            left: 830px;
+            font-family: monospace;
+            font-size: 1.2em;
+            border-radius: 10px;
+            top: 100px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+            transform: translateY(-44.5%) scale(0);
+            transition: 0.3s ease-in-out;
+        }
+        .settings-container.active{
+            transform: translateY(0%) scale(1);
+        }
+        .sett-login{
+            position: absolute; 
+            top: 50px; 
+            left: 100px;
+        }
+        .sett-pass{
+            position: absolute; 
+            top: 125px; 
+            left: 100px; 
+        }
+        .sett-email{
+            position: absolute; 
+            top: 200px;
+            left: 100px; 
+        }
+        .del-acc{
+            position: absolute; 
+            top: 325px; 
+            left: 100px;
+        }
+        .delete{
+            font-family: monospace;
+            width: 150px; 
+            height: 30px;
+            border-radius: 10px;
+            border: 2px solid #ab3333;
+            font-size: 0.9em;
+            color: #ab3333;
+            background: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .delete:hover{
+            color: #8a2b2b; 
+            border: 2px solid #8a2b2b;
+            background:whitesmoke;
+        }
+        .change-pass{
+            width: 150px; 
+            height: 30px;
+            border-radius: 10px;
+            border: none;
+            font-family: monospace; 
+            font-size: 0.86em;
+            font-weight: 600;
+            margin: 10px 0px 0px 0px;
+            color: #666;
+            cursor: pointer;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .change-pass:hover{
+            background-color: #d1d1d1; 
+            color: black; 
+        }
+        .change-login{
+            width: 150px; 
+            height: 30px;
+            border-radius: 10px;
+            border: none;
+            font-family: monospace; 
+            font-size: 0.86em;
+            font-weight: 600;
+            margin: 10px 0px 0px 0px;
+            color: #666;
+            cursor: pointer;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .change-login:hover{
+            background-color: #d1d1d1; 
+            color: black; 
+        }
+        .change-email{
+            width: 150px; 
+            height: 30px;
+            border-radius: 10px;
+            border: none;
+            font-family: monospace; 
+            font-size: 0.86em;
+            font-weight: 600;
+            margin: 10px 0px 0px 0px;
+            color: #666;
+            cursor: pointer;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .change-email:hover{
+            background: #d1d1d1;
+            color: black;
+        }
+        .offsett{
+            position: absolute; 
+            left: 325px; 
+            top: 7px;
+            cursor: pointer;
+        }
+        .log-change-container{
+            width: 350px; 
+            height: 400px;
+            background-color: white;
+            position: relative;
+            left: 830px;
+            top: -300px;
+            border-radius: 10px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+            display: none; 
+        }
+        .log-change-container.active{
+            display: block;
+        }
+        .log-old{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 70px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
 
-        /* стили чекбокса и зачеркивания */
-.note-card.completed .note-description,
-.note-card.completed strong,
-.note-card.completed small,
-.note-card.completed .priority {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-.complete-checkbox {
-    position: absolute;
-    top: 127px;
-    left: 265px;
-    transform: scale(1.3);
-    cursor: pointer;
-    z-index: 2;
-}
-
-        /* контейнер для выполненых заметок */
-.completed-container {
-    position: relative;
-    left: 300px;
-    top: 550px;          /* снизу линии */
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: calc(100% - 320px);
-    margin-bottom: 20px;
-}
+        }
+        .log-input:hover{
+            border: 1px solid #5c5c5c;
+        }
+        .log-text{
+            position: relative; 
+            left: 70px; 
+            top: 41px; 
+            font-weight: 700;
+            font-size: 1.em;
+            pointer-events: none; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .log-new{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 150px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .log-text2{
+            position: relative; 
+            left: 70px; 
+            top: 85px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .log-new:hover{
+            border: 1px solid #5c5c5c;
+        }
+        .log-ver{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 230px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .log-text3{
+            position: relative; 
+            left: 70px; 
+            top: 125px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .log-ver:hover{
+            border: 1px solid #5c5c5c;
+        }
+        .confirm-log{
+            position: relative; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; 
+            font-weight: 700; 
+            cursor: pointer; 
+            left: 72px; 
+            top: 200px;
+            width: 200px; 
+            height: 30px; 
+            background: #42AAFF;
+            border-radius: 5px;
+            border: 1px solid #a6a6a6; 
+        }
+        .confirm-log:hover{ 
+            background: #3c9dde; 
+            border: 1px solid #5c5c5c;
+        }
+        .offlog{
+            position: absolute; 
+            left: 325px; 
+            top: 7px;
+            cursor: pointer;
+        }
+        .pass-change-container{
+            width: 350px; 
+            height: 400px;
+            background-color: white;
+            position: relative;
+            left: 830px;
+            top: -300px;
+            border-radius: 10px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+            display: none;
+        }
+        .pass-change-container.active{
+            display: block;
+        }
+        .pass-text{
+            position: relative; 
+            left: 70px; 
+            top: 41px; 
+            font-weight: 700;
+            font-size: 1.em;
+            pointer-events: none; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .pass-old{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 70px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .pass-text2{
+            position: relative; 
+            left: 70px; 
+            top: 85px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .pass-new{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 150px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .pass-text3{
+            position: relative; 
+            left: 70px; 
+            top: 125px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .pass-ver{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 230px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .confirm-pass{
+            position: relative; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; 
+            font-weight: 700; 
+            cursor: pointer; 
+            left: 72px; 
+            top: 200px;
+            width: 200px; 
+            height: 30px; 
+            background: #42AAFF;
+            border-radius: 5px;
+            border: 1px solid #a6a6a6; 
+        }
+        .offpass{
+            position: absolute; 
+            left: 325px; 
+            top: 7px;
+            cursor: pointer;
+        }
+        .email-change-container{
+            width: 350px; 
+            height: 400px;
+            background-color: white;
+            position: relative;
+            left: 830px;
+            top: -300px;
+            border-radius: 10px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+            display: none;
+        }
+        .email-change-container.active{
+            display: block;
+        }
+        .email-text{
+            position: relative; 
+            left: 70px; 
+            top: 41px; 
+            font-weight: 700;
+            font-size: 1.em;
+            pointer-events: none; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        } 
+        .email-old{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 70px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .email-text2{
+            position: relative; 
+            left: 70px; 
+            top: 85px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .email-new{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 150px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .email-text3{
+            position: relative; 
+            left: 70px; 
+            top: 125px; 
+            font-weight: 700;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+        .email-ver{
+            border: 1px solid #a6a6a6;
+            border-radius: 4px; 
+            background: #f3ecec;
+            position: absolute; 
+            left: 70px;
+            top: 230px; 
+            outline: none;
+            height: 20px;
+            width: 200px;
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+            font-size: 0.8em;
+        }
+        .confirm-email{
+            position: relative; 
+            font-family: 'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; 
+            font-weight: 700; 
+            cursor: pointer; 
+            left: 72px; 
+            top: 200px;
+            width: 200px; 
+            height: 30px; 
+            background: #42AAFF;
+            border-radius: 5px;
+            border: 1px solid #a6a6a6; 
+        }
+        .offemail{
+            position: absolute; 
+            left: 325px; 
+            top: 7px;
+            cursor: pointer;
+        }
+        .filter-down-icon{
+            position: absolute;
+        }
+        .filter-choose-container{
+            width: 135px; 
+            height: 70px; 
+            background-color: white; 
+            position: absolute;
+            left: 60px; 
+            top: 280px;
+            border-radius: 5px;
+            font-family:  'Twemoji Country Flags', 'Twemoji Country Flags', -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; 
+            display: none;
+        }
+        .filter-choose-container.active{
+            display: block
+        }
+        .filter-time{
+            background: white;
+            outline: none; 
+            border: none;
+            height: 21px; 
+            width: 100%; 
+            font-size: 1em;
+            position: relative;
+            top: 14px;
+            padding-right: 25px;
+        }
+        .filter-priority{
+            background: white;
+            outline: none; 
+            border: none;
+            height: 21px; 
+            width: 100%; 
+            font-size: 1em;
+            position: relative;
+            top: 7px;
+        }
+        .filter-time:hover{
+            background:#3c9dde;
+        }
+        .filter-priority:hover{
+            background:#3c9dde;
+        }

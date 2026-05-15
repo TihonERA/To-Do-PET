@@ -8,11 +8,14 @@ const CreateToDo = document.querySelector('.create');
         const descInput = document.querySelector('.description');
         const timeInput = document.querySelector('.time');
         const prioritySelect = document.querySelector('select[name="priority"]');
-
         const descModal = document.getElementById('descModal');
         const descModalTextarea = document.getElementById('descModalTextarea');
         const saveDescBtn = document.getElementById('saveDescBtn');
         const cancelDescBtn = document.getElementById('cancelDescBtn');
+        const settInput = document.querySelector('.sett');
+        const settOpen = document.querySelector('.settings-container');
+        const closeSett = document.querySelector('.offsett')
+        const delAcc = document.querySelector('.delete')
 
         let notes = [];
         let editId = null;
@@ -244,3 +247,285 @@ const CreateToDo = document.querySelector('.create');
         window.addEventListener('click', (e) => {
             if (e.target === descModal) closeDescModal();
         });
+
+        settInput.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        resetForm();
+        settOpen.classList.add('active');
+        });
+
+        closeSett.addEventListener('click' , () => {
+            resetForm()
+            settOpen.classList.remove('active')
+        });
+        let alertShown = false;
+
+        delAcc.addEventListener('click', () => {
+            if (alertShown)
+                return 
+            alert('Вы точно хотите удалить аккаунт?')
+            alertShown = true;
+        })
+/*Получаем данные почты с страницы регистрации */
+        const url = 'http://localhost:8000/registration/get-email';
+        fetch(url)
+            .then(response => response.json())  
+            .then(data => {
+                document.querySelector('.email').innerText = data.email;
+            })
+/*Получаем данные почты с страницы логина */
+        const urlhome = 'http://localhost:8000/login/get-email';
+        fetch(urlhome) 
+        .then(response => responce.json())
+        .then(data =>{
+            document.querySelector('.email').innerText =data.email;
+        })
+        const LogChangeContainer = document.querySelector('.log-change-container') 
+        const LogSubmit = document.querySelector('.confirm-log')
+        const ChangeLog = document.querySelector('.change-login')
+        const offLog = document.querySelector('.offlog')
+
+        ChangeLog.addEventListener('click' , (e) => {
+            e.preventDefault(); 
+            resetForm(); 
+            settOpen.classList.remove('active')
+            LogChangeContainer.classList.add('active')
+        })
+        offLog.addEventListener('click' , () => {
+            resetForm() 
+            LogChangeContainer.classList.remove('active')
+            settOpen.classList.add('active')
+        })
+        const PassChangeContainer = document.querySelector('.pass-change-container')
+        const PassSubmit = document.querySelector('.confirm-pass') 
+        const ChangePass = document.querySelector('.change-pass') 
+        const offPass = document.querySelector('.offpass') 
+
+        ChangePass.addEventListener('click' , (e) =>{
+            e.preventDefault() 
+            resetForm() 
+            settOpen.classList.remove('active') 
+            PassChangeContainer.classList.add('active')
+        }) 
+        offPass.addEventListener('click' , () =>{
+            resetForm() 
+            PassChangeContainer.classList.remove('active') 
+            settOpen.classList.add('active')
+        })
+        
+        const EmailChangeContainer = document.querySelector('.email-change-container') 
+        const EmailSubmit = document.querySelector('.confirm-email') 
+        const ChangeEmail = document.querySelector('.change-email') 
+        const offEmail = document.querySelector('.offemail') 
+
+        ChangeEmail.addEventListener('click' , (e) =>{
+            e.preventDefault() 
+            resetForm() 
+            settOpen.classList.remove('active') 
+            EmailChangeContainer.classList.add('active')
+        }) 
+
+        offEmail.addEventListener('click' , () =>{
+            resetForm() 
+            EmailChangeContainer.classList.remove('active') 
+            settOpen.classList.add('active')
+        })
+
+        const msgDiv = document.querySelector('.message');
+
+  PassChangeContainer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldPass = document.querySelector('.pass-old').value;
+    const newPass = document.querySelector('.pass-new').value;
+    const confirmPass= document.querySelector('confirm-pass').value;
+
+    // Валидация 
+    if (!oldPass || !newPass || !confirmPass) {
+      msgDiv.innerText = 'Заполните все поля';
+      return;
+    }
+    if (newPass.length < 6) {
+      msgDiv.innerText = 'Новый пароль должен быть не менее 6 символов';
+      return;
+    }
+    if (newPass !== confirmPass) {
+      msgDiv.innerText = 'Новый пароль и подтверждение не совпадают';
+      return;
+    }
+
+    // === Отправка на сервер ===
+    try {
+      const response = await fetch('/users/update_password', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldPass, newPass })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        msgDiv.innerText = result.message || 'Пароль успешно изменён'
+        form.reset();       // очистить форму
+      } else {
+        msgDiv.innerText = result.message || 'Ошибка при смене пароля'
+      }
+    } catch (error) {
+      msgDiv.innerText = 'Ошибка сети: ' + error.message;
+    }
+  })
+
+const msgDivEmail = document.querySelector('.email-message');
+  EmailChangeContainer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldEmail = document.querySelector('.email-old').value;
+    const newEmail = document.querySelector('.email-new').value;
+    const confirmEmail= document.querySelector('confirm-email').value;
+
+    if (!oldEmail || !newEmail || !confirmEmail) {
+      msgDivEmail.innerText = 'Заполните все поля';
+      return;
+    }
+    
+    if (newEmail !== confirmEmail) {
+      msgDivEmail.innerText = 'Новая почта и подтверждение не совпадают';
+      return;
+    }
+
+    try {
+      const response = await fetch('/users/update_email', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldEmail, newEmail })
+      });
+
+      const resultEmail = await response.json();
+
+      if (response.ok) {
+        msgDivEmail.innerText = resultEmail.email-message || 'Почта успешно заменена'
+        form.reset();       // очистить форму
+      } else {
+        msgDivEmail.innerText = resultEmail.email-message || 'Ошибка при смене почты'
+      }
+    } catch (error) {
+      msgDivEmail.innerText = 'Ошибка сети: ' + error.email-message;
+    }
+  })
+    const msgDivLog = document.querySelector('.log-message');
+
+    LogChangeContainer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldLog = document.querySelector('.log-old').value;
+    const newLog = document.querySelector('.log-new').value;
+    const confirmLog= document.querySelector('confirm-log').value;
+
+    // Валидация 
+    if (!oldLog || !newLog || !confirmLog) {
+      msgDivLog.innerText = 'Заполните все поля';
+      return;
+    }
+    if(!newLog.length < 8) {
+        msgDivLog.innerText = 'Новый логин должен быть не менее 8 символов'
+        return
+    }
+    if (newLog !== confirmLog) {
+      msgDivLog.innerText = 'Новый логин и подтверждение не совпадают';
+      return;
+    }
+
+    try {
+      const response = await fetch('/users/update_login', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldLog, newLog })
+      });
+
+      const resultLog = await response.json();
+
+      if (response.ok) {
+        msgDivLog.innerText = resultLog.log-message || 'Почта успешно заменена'
+        form.reset();       // очистить форму
+      } else {
+        msgDivLog.innerText = resultLog.log-message || 'Ошибка при смене почты'
+      }
+    } catch (error) {
+      msgDivLog.innerText = 'Ошибка сети: ' + error.log-message;
+    }
+  })
+  const filterChooseContainer = document.querySelector('.filter-choose-container') 
+  const filterOpen = document.querySelector('.fil')
+  
+  filterOpen.addEventListener('click', (event) => {
+        event.stopPropagation(); // чтобы клик не закрыл меню сразу
+        const isVisible = filterChooseContainer.style.display === 'block';
+        filterChooseContainer.style.display = isVisible ? 'none' : 'block';
+    });
+    document.addEventListener('click', () => {
+        filterChooseContainer.style.display = 'none';
+    });
+    filterChooseContainer.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+    const originalRenderNotes = renderNotes;
+
+
+let sortMode = null;
+
+function sortByPriority(arr) {
+    const order = { 'High': 1, 'Mid': 2, 'Low': 3 };
+    return [...arr].sort((a, b) => (order[a.priority] || 2) - (order[b.priority] || 2));
+}
+
+function sortByDeadline(arr) {
+    return [...arr].sort((a, b) => {
+        if (!a.deadline && !b.deadline) return 0;
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return new Date(a.deadline) - new Date(b.deadline);
+    });
+}
+renderNotes = function() {
+    let activeNotes = notes.filter(n => !n.completed);
+    let completedNotes = notes.filter(n => n.completed);
+
+    if (sortMode === 'priority') {
+        activeNotes = sortByPriority(activeNotes);
+        completedNotes = sortByPriority(completedNotes);
+    } else if (sortMode === 'deadline') {
+        activeNotes = sortByDeadline(activeNotes);
+        completedNotes = sortByDeadline(completedNotes);
+    }
+    
+    miniContainer.innerHTML = '';
+    completedContainer.innerHTML = '';
+
+    if (notes.length === 0) {
+        completedContainer.style.display = 'none';
+        return;
+    }
+    activeNotes.forEach(note => {
+        miniContainer.appendChild(createNoteCard(note));
+    });
+    if (completedNotes.length > 0) {
+        completedContainer.style.display = 'flex';
+        completedNotes.forEach(note => {
+            completedContainer.appendChild(createNoteCard(note));
+        });
+    } else {
+        completedContainer.style.display = 'none';
+    }
+};
+
+document.querySelector('.filter-priority')?.addEventListener('click', () => {
+    sortMode = sortMode === 'priority' ? null : 'priority';
+    renderNotes();
+    document.querySelector('.filter-choose-container').style.display = 'none';
+});
+
+document.querySelector('.filter-time')?.addEventListener('click', () => {
+    sortMode = sortMode === 'deadline' ? null : 'deadline';
+    renderNotes();
+    document.querySelector('.filter-choose-container').style.display = 'none';
+});
