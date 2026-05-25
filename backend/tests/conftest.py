@@ -40,7 +40,7 @@ def auth_token(client):
         "login": "pytest_user",
         "password": "pytestpassword15"
     }
-    response = client.post("/register", data=register_data)
+    response = client.post("/register", json=register_data)
     
     # Если пользователь уже есть (от предыдущих запусков), может быть ошибка 409.
     # Для простоты теста считаем, что регистрация успешна или пользователь уже существует.
@@ -52,7 +52,7 @@ def auth_token(client):
         "login_or_email": "pytest_user",
         "password": "pytestpassword15"
     }
-    response = client.post("/login", data=login_data)
+    response = client.post("/login", json=login_data)
     
     assert response.status_code == 200
     return response.json()["access_token"]

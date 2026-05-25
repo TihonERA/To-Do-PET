@@ -1,53 +1,64 @@
-    const form = document.querySelector('.form-box');
-    const emailInput = document.querySelector('.email');
-    const loginInput = document.querySelector('.login');
-    const passInput = document.querySelector('.pass');
-    const confirmInput = document.querySelector('input[type="password"]:not(.pass)'); 
-    const submitBtn = document.querySelector('submit-btn');
+const form = document.querySelector('.form-box');
+const emailInput = document.querySelector('.email');
+const loginInput = document.querySelector('.login');
+const passInput = document.querySelector('.pass');
+const confirmInput = document.querySelector('input[type="password"]:not(.pass)');
+const submitBtn = document.querySelector('.submit-btn');
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault()
-        const email = emailInput.value.trim();
-        const login = loginInput.value.trim();
-        const password = passInput.value;
-        const confirm = confirmInput.value;
+// Создаем элемент для ошибок
+const errorDiv = document.createElement('div');
+form.insertBefore(errorDiv, form.firstChild);
 
-        if (!email || !login || !password || !confirm) {
-            errorDiv.textContent = 'Заполните все поля';
-            return;
-        }
-        if (password_length < 16) {
-            errorDiv.textContent = 'Пароль должен быть не менее 16 символов';
-            return
-        }
-        if (password !== confirm) {
-            alert('Пароли не совпадают')
-            return;
-        }
-        if (!password_lenght >72){
-            alert('Пароль не может быть больше 72 символов') 
-            return
-        }
-        async function userDate (email , password , login){
-            const responce = await fetch('http://api.localhost:8000/register' , {
-                method: 'POST' ,
-                headers: {'Content-Type' : 'application/json'}, 
-                body: JSON.stringify({email , login , password})
-            })
-            if (!responce.ok) {
-                const errorMess = await responce.json()
-                const errorAlert = await alert('Ошибка Регистрации') 
-                throw new Error(errorAlert)
-            }
-        };
-    });
-        const data = await responce.json()
-        const token = data.access_token
-        localStorage.setItem('usertoken' , token)
-
-        submitBtn.addEventListener('click' , () =>{
-            if(submitBtn == 'click') 
-                window.location.href = 'http://localhost:8000/'
-        })
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
     
+    const email = emailInput.value.trim();
+    const login = loginInput.value.trim();
+    const password = passInput.value;
+    const confirm = confirmInput.value;
 
+    if (!email || !login || !password || !confirm) {
+        errorDiv.textContent = 'Заполните все поля';
+        return;
+    }
+    
+    if (password.length < 16) {
+        errorDiv.textContent = 'Пароль должен быть не менее 16 символов';
+        return;
+    }
+    
+    if (password.length > 72) {
+        errorDiv.textContent = 'Пароль не может быть больше 72 символов';
+        return;
+    }
+    
+    if (password !== confirm) {
+        errorDiv.textContent = 'Пароли не совпадают';
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, login, password })
+        });
+
+        if (!response.ok) {
+            const errorMess = await response.json();
+            errorDiv.textContent = errorMess.message || 'Ошибка регистрации';
+            return;
+        }
+
+        const data = await response.json();
+        const token = data.access_token;
+        localStorage.setItem('usertoken', token);
+        
+        // Перенаправление после успешной регистрации
+        window.location.href = 'http://localhost:8000/';
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        errorDiv.textContent = 'Ошибка соединения с сервером';
+    }
+});

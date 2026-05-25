@@ -13,7 +13,7 @@ def test_update_profile_invalid(client, auth_headers):
         "new_login": "pytest_user",
         "new_email": "pytest_user@gmail.com"
     }
-    response = client.patch("/users/update_profile", data=form_data, headers=auth_headers)
+    response = client.patch("/users/update_profile", json=form_data, headers=auth_headers)
     assert response.status_code == 404
 
 def test_update_profile(client, auth_headers):
@@ -40,6 +40,26 @@ def test_update_profile(client, auth_headers):
         "new_email": old_email
     }
     client.patch("/users/update_profile", data=revert_data, headers=auth_headers)
+
+def test_update_profile_login(client, auth_headers):
+    old_data = client.get("/users/me", headers=auth_headers).json()
+    old_login = old_data["login"]
+    
+    # Обновляем профиль
+    form_data = {
+        "new_login": "pyytestststst",
+    }
+    response = client.patch("/users/update_profile", json=form_data, headers=auth_headers)
+    data = response.json()
+    
+    assert response.status_code == 200
+    assert data["login"] == "pyytestststst"
+    
+    # ВОССТАНАВЛИВАЕМ старые данные
+    revert_data = {
+        "new_login": old_login,
+    }
+    client.patch("/users/update_profile", json=revert_data, headers=auth_headers)
 
 def test_update_password(client, auth_headers):
     form_data = {
