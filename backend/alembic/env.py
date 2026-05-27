@@ -6,15 +6,15 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
+from dotenv import load_dotenv
 
-# --- Добавляем корень проекта в sys.path ---
+load_dotenv()
+
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
-# --------------------------------------------------
 
-# --- ИМПОРТЫ МОДЕЛЕЙ ---
 from backend.models.base import Base 
 from backend.models import user, task 
 
@@ -22,6 +22,10 @@ config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+db_url = os.getenv("DATABASE_URL")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 target_metadata = Base.metadata
 
