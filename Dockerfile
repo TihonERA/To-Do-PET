@@ -7,7 +7,6 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./backend /code/backend
 COPY ./Frontend /code/Frontend
-COPY ./.env /code/.env
 
 EXPOSE 8000
 
