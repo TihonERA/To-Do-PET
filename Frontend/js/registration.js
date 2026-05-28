@@ -3,10 +3,11 @@ const emailInput = document.querySelector('.email');
 const loginInput = document.querySelector('.login');
 const passInput = document.querySelector('.pass');
 const confirmInput = document.querySelector('.confirm-pass');
-const submitBtn = document.querySelector('.submit-btn'); 
+const submitBtn = document.querySelector('.submit-btn');
+const errorMess = document.querySelector('.error-mess')
 
 async function userDate(email, login, password) {
-    const response = await fetch('http://api.localhost:8000/registration', {
+    const response = await fetch('http://localhost:8000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, login, password })
@@ -16,14 +17,14 @@ async function userDate(email, login, password) {
 }
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
+submitBtn.disabled = true
 const email = emailInput.value.trim()
 const login = loginInput.value.trim()
 const password = passInput.value
 const confirm = confirmInput.value
-    
+    try{
     if (!email || !login || !password || !confirm) {
-        alert('Заполните всеполя')
+        alert('Заполните все поля')
         return
     }
     if (password.length < 16) {
@@ -42,5 +43,10 @@ const confirm = confirmInput.value
         localStorage.setItem('usertoken', token);
         submitBtn.addEventListener('click' , () =>{
             window.location.href = 'http://localhost:8000/'
-        })
-});
+        })}
+        catch(err){
+        errorMess.textContent = err.message || 'Ошибка соединения с сервером';
+        console.error(err);
+        submitBtn.disabled = false; 
+        }
+}); 

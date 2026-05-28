@@ -27,6 +27,7 @@ button{
     justify-content: center; 
     align-items: center; 
     flex-direction: column;
+    cursor: pointer;
 }
 
 .container{ 
@@ -117,4 +118,8 @@ header{
 }
 .acc{
     color: #ecf1fb;
+}
+.error-mess{
+    color: red; 
+    margin-top: 10px;
 }
