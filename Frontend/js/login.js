@@ -50,7 +50,7 @@ form.addEventListener('submit', async (e) => {
 
         if (response.ok) {
             localStorage.setItem('access_token', data.access_token);
-            window.location.href = '/';
+            window.location.href = 'http://localhost:8000/';
         } else {
             errorDiv.textContent = data.detail || 'Неверный логин или пароль';
         }

@@ -59,6 +59,7 @@ input{
     margin-bottom: 35px;
     top: -50px;
     background: #4a535d;
+    color: #ecf1fb;
     
 }
 label{
@@ -109,4 +110,7 @@ header{
     font-family: monospace; 
     font-size: 3em;
     top: -15px;
+}
+.acc{
+    color:#ecf1fb;
 }
