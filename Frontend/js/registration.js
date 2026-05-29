@@ -4,49 +4,71 @@ const loginInput = document.querySelector('.login');
 const passInput = document.querySelector('.pass');
 const confirmInput = document.querySelector('.confirm-pass');
 const submitBtn = document.querySelector('.submit-btn');
-const errorMess = document.querySelector('.error-mess')
+const errorDiv = document.querySelector('.error-mess');
+
+function showError(message) {
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block'
+}
+function clearError() {
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+}
 
 async function userDate(email, login, password) {
-    const response = await fetch('http://localhost:8000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, login, password })
-    });
-    const data = await response.json();
-    return data.access_token; 
+  const response = await fetch('http://localhost:8000/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, login, password })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const detail = errorData.detail || `Ошибка ${response.status}: ${response.statusText}`;
+    throw new Error(detail);
+  }
+
+  const data = await response.json();
+  return data.access_token;
 }
+
 form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-submitBtn.disabled = true
-const email = emailInput.value.trim()
-const login = loginInput.value.trim()
-const password = passInput.value
-const confirm = confirmInput.value
-    try{
-    if (!email || !login || !password || !confirm) {
-        alert('Заполните все поля')
-        return
-    }
-    if (password.length < 16) {
-        alert('Пароль должен быть не менее 16 символов')
-        return
-    }
-    if (password !== confirm) {
-        alert('Пароли не совпадают')
-        return
-    }
-    if (password.length > 72) {
-        alert('Пароль не может быть больше 72 символо')
-        return
-    }
-        const token = await userDate(email, login, password);
-        localStorage.setItem('usertoken', token);
-        submitBtn.addEventListener('click' , () =>{
-            window.location.href = 'http://localhost:8000/'
-        })}
-        catch(err){
-        errorMess.textContent = err.message || 'Ошибка соединения с сервером';
-        console.error(err);
-        submitBtn.disabled = false; 
-        }
-}); 
+  e.preventDefault();
+  clearError();
+  submitBtn.disabled = true;
+
+  const email = emailInput.value.trim();
+  const login = loginInput.value.trim();
+  const password = passInput.value;
+  const confirm = confirmInput.value;
+
+  if (!email || !login || !password || !confirm) {
+    showError('Заполните все поля');
+    submitBtn.disabled = false;
+    return;
+  }
+  if (password.length < 16) {
+    showError('Пароль должен быть не менее 16 символов');
+    submitBtn.disabled = false;
+    return;
+  }
+  if (password !== confirm) {
+    showError('Пароли не совпадают');
+    submitBtn.disabled = false;
+    return;
+  }
+  if (password.length > 72) {
+    showError('Пароль не может быть больше 72 символов');
+    submitBtn.disabled = false;
+    return;
+  }
+
+  try {
+    const token = await userDate(email, login, password);
+    localStorage.setItem('usertoken', token);
+    window.location.href = 'http://localhost:8000/';
+  } catch (err) {
+    showError(err.message || 'Произошла ошибка при регистрации');
+    submitBtn.disabled = false;
+  }
+});

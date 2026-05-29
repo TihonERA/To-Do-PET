@@ -120,6 +120,14 @@ header{
     color: #ecf1fb;
 }
 .error-mess{
-    color: red; 
-    margin-top: 10px;
+    color: red;
+    position: relative;
+    display: block;
+    width: 200px; 
+    height: 20px;
+    background: transparent;
+    z-index: 5; 
+    top: -90px;
+    left: 25px;
+    font-size: 1.1em; 
 }
