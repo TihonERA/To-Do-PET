@@ -14,8 +14,6 @@ if (!errorDiv) {
     form.appendChild(errorDiv);
 }
 
-// Убираем запрос, который был здесь — он не нужен пошел нахуй пидорас на дипсике ротан твой ебал хуесос!
-
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorDiv.textContent = '';
