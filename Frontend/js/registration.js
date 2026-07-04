@@ -30,6 +30,7 @@ async function userDate(email, login, password) {
 
   const data = await response.json();
   return data.access_token;
+  localStorage(access_token)
 }
 
 form.addEventListener('submit', async (e) => {

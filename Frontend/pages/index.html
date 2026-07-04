@@ -1,115 +1,89 @@
 <!DOCTYPE html> 
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>Главная Страница</title>
-    <link rel="stylesheet" href="/static/css/index.css">
+    <meta charset="UTF-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <title>V2</title> 
+    <link rel="stylesheet" href="mainv2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
-     <header>
-        <div class="To-Do">
-            <h2 class="To">To-Do</h2>           
-        </div>
-    </header>
-    <div class="container">
-        <svg class="add-icon" viewBox="0 0 24 24" width="28" height="28" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-        <p class="create">Создать заметку</p>
-        <svg class="filter-icon" viewBox="0 0 24 24" width="26" height="26" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-        <p class="fil">Отфильтровать<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="filter-down-icon"><polyline points="6 9 12 15 18 9"></polyline></svg></p>
-        <svg class="sett-icon" viewBox="0 0 24 24" width="27" height="27" stroke="white" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <p class="sett">Настройки</p>
-    </div>
-    <div class="filter-choose-container">
-        <button class="filter-priority">По приоритету</button>
-        <button class="filter-time">По времени</button>
-    </div>
-    <hr class="line">
+<header class="header">To-Do</header>
+<div class="main-container">
     <div class="create-container">
-        <form>
-            <input placeholder="Название заметки" class='name'>
-            <p>
-                <textarea placeholder="Описание заметки" class="description"></textarea> 
-            </p>
-            <p class="to-do-time-container">
-                <label class="to-do-time" type="date">Срок</label>
-                <input type="datetime-local" class="time">
-                <select name="priority" value="Приоритет">
-                    <option value="pri">Приоритет</option>
-                    <option value="High" class="H">Высокая</option>
-                    <option value="Mid" class="M">Средняя</option>
-                    <option value="Low" class="L">Низкая</option>
-                </select>
-                <a class="add">Добавить заметку</a>
-            </p>
-        </form>
-        <div class="offwind">&#10005;</div>
+        <span class="create"><svg xmlns="http://www.w3.org/2000/svg" class="create-icon" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"/></svg>Добавить заметку</span>
     </div>
-    <div class="mini-container"></div>
-    <div class="completed-container"></div>
-    <div id="descModal" class="modal-desc">
-        <div class="modal-desc-content">
-            <h3>Редактирование описания</h3>
-            <textarea id="descModalTextarea" placeholder="Введите описание..."></textarea>
-            <div class="modal-buttons">
-                <button id="saveDescBtn" class="save-desc-btn">Сохранить</button>
-                <button id="cancelDescBtn" class="cancel-desc-btn">Отмена</button>
+    <div class="filter-container"> 
+        <span class="filter"><svg width="24" height="24" viewBox="0 0 24 24" class="filter-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+</svg>Отфильтровать</span>
+    </div>
+    <div class="sett-btn-cont">
+        <span class="sett-btn"> <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sett-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Настройки</span>
+    </div>
+</div>
+<div class="todo-container">
+    <textarea class="todo-title" placeholder="Название"></textarea>
+    <textarea class="todo-description" placeholder="Описание"></textarea>
+        <div class="buttons-container">
+            <span class="data-container">
+            <div class="data-input"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" class="data-icon" aria-hidden="true"><path fill="#bbb7b7" d="M12 2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1m-1.25 7a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5m.75-5a.5.5 0 1 1 0 1h-7a.5.5 0 0 1 0-1z"></path></svg>Срок</div>
+            </span>
+            <span class="priority-container">
+                <div class="priority-input"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" class="priority-icon"  ><path fill="#bbb7b7"  d="M2 3a.5.5 0 0 1 .276-.447C3.025 2.179 4.096 2 5.5 2c.901 0 1.485.135 2.658.526C9.235 2.885 9.735 3 10.5 3c1.263 0 2.192-.155 2.776-.447A.5.5 0 0 1 14 3v6.5a.5.5 0 0 1-.276.447c-.749.375-1.82.553-3.224.553-.901 0-1.485-.135-2.658-.526C6.765 9.615 6.265 9.5 5.5 9.5c-1.08 0-1.915.113-2.5.329V13.5a.5.5 0 0 1-1 0V3m1 5.779v-5.45C3.585 3.113 4.42 3 5.5 3c.765 0 1.265.115 2.342.474C9.015 3.865 9.599 4 10.5 4c1.002 0 1.834-.09 2.5-.279v5.45c-.585.216-1.42.329-2.5.329-.765 0-1.265-.115-2.342-.474C6.985 8.635 6.401 8.5 5.5 8.5c-1.001 0-1.834.09-2.5.279" clip-rule="evenodd"></path></svg>Приоритет</div>
+            </span>
+        </div>
+            <div class="select-priority-container">
+                <div class="high-priority"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="high-priority-icon" data-icon-name="priority-icon" data-priority="1"><path fill="indianred" fill-rule="evenodd" d="M4.223 4.584A.5.5 0 0 0 4 5v14.5a.5.5 0 0 0 1 0v-5.723C5.886 13.262 7.05 13 8.5 13c.97 0 1.704.178 3.342.724 1.737.58 2.545.776 3.658.776 1.759 0 3.187-.357 4.277-1.084A.5.5 0 0 0 20 13V4.5a.5.5 0 0 0-.777-.416C18.313 4.69 17.075 5 15.5 5c-.97 0-1.704-.178-3.342-.724C10.421 3.696 9.613 3.5 8.5 3.5c-1.758 0-3.187.357-4.277 1.084" clip-rule="evenodd"></path></svg>Высокий</div>
+                <div class="mid-priority"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="mid-priority-icon" data-icon-name="priority-icon" data-priority="2"><path fill="khaki" fill-rule="evenodd" d="M4.223 4.584A.5.5 0 0 0 4 5v14.5a.5.5 0 0 0 1 0v-5.723C5.886 13.262 7.05 13 8.5 13c.97 0 1.704.178 3.342.724 1.737.58 2.545.776 3.658.776 1.759 0 3.187-.357 4.277-1.084A.5.5 0 0 0 20 13V4.5a.5.5 0 0 0-.777-.416C18.313 4.69 17.075 5 15.5 5c-.97 0-1.704-.178-3.342-.724C10.421 3.696 9.613 3.5 8.5 3.5c-1.758 0-3.187.357-4.277 1.084" clip-rule="evenodd"></path></svg>Средний</div>
+                <div class="low-priority"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="low-priority-icon" data-icon-name="priority-icon" data-priority="3"><path fill="lightgreen" fill-rule="evenodd" d="M4.223 4.584A.5.5 0 0 0 4 5v14.5a.5.5 0 0 0 1 0v-5.723C5.886 13.262 7.05 13 8.5 13c.97 0 1.704.178 3.342.724 1.737.58 2.545.776 3.658.776 1.759 0 3.187-.357 4.277-1.084A.5.5 0 0 0 20 13V4.5a.5.5 0 0 0-.777-.416C18.313 4.69 17.075 5 15.5 5c-.97 0-1.704-.178-3.342-.724C10.421 3.696 9.613 3.5 8.5 3.5c-1.758 0-3.187.357-4.277 1.084" clip-rule="evenodd"></path></svg>Низкий</div>
             </div>
-        </div>
+        <span class="close-add-container">
+<span class="close-container">
+    <div class="close-todo">Отмена</div>
+</span> 
+    <span class="add-container">
+        <div class="add-todo">Создать заметку</div>
+    </span>
+</span>
+    <div class="close-war-container">
+        <header class="close-war">
+                <p class="war-text">Удалить несохраненные изменения?</p> 
+                <p class="second-war-text">Несохранненые изменения будут удалены</p> 
+            <footer class="war-buttons"> 
+                <button class="war-cancel">Отмена</button>
+                <button class="war-confirm">Удалить</button>
+            </footer>
+        </header>
     </div>
-    <div class="settings-container">
-        <div class="sett-login">
-            <div>Логин</div>
-        <button class="change-login">Изменить Логин </button>
+</div>
+<div class="notes-list"></div>
+<div class="settings-container">
+    <h2>Настройки профиля</h2>
+    <form id="settingsForm">
+        <div class="form-group">
+                <label for="username">Новый логин</label>
+                <input type="text" id="username" placeholder="Текущий: alex_concept">
             </div>
-        <div class="sett-email">
-            <div>Email</div>
-            <div class="email"></div>
-            <button class="change-email">Изменить Email</button>
-        </div>
-        <div class="sett-pass">
-            <div>Пароль</div>
-        <button class="change-pass">Изменить пароль</button>
-        </div>
-        <div class="del-acc">
-            <button class="delete">Удалить аккаунт</button>
-        </div>
-        <div class="offsett">&#10005;</div>
-    </div>
-    <div class="log-change-container">
-        <p class="log-text">Нынешний логин</p>
-        <p><input class="log-old"></p>
-        <p class="log-text2">Новый Логин</p>
-        <p><input class="log-new"></p>
-        <p class="log-text3">Подтвердите Логин</p>
-        <p><input class="log-ver"></p>
-        <button class="confirm-log" type="submit">Изменить Логин</button>
-        <div class="offlog">&#10005;</div>
-        <div class="log-message"></div>
-    </div>
-    <div class="pass-change-container">
-        <p class="pass-text">Нынешний Пароль</p>
-        <p><input class="pass-old"></p>
-        <p class="pass-text2">Новый Пароль</p>
-        <p><input class="pass-new"></p>
-        <p class="pass-text3">Подтвердите Пароль</p>
-        <p><input class="pass-ver"></p>
-        <button class="confirm-pass" type="submit">Изменить Пароль</button>
-        <div class="offpass">&#10005;</div>
-        <div class="message"></div>
-    </div>
-    <div class="email-change-container">
-        <p class="email-text">Нынешняя Почта</p>
-        <p><input class="email-old"></p>
-        <p class="email-text2">Новая Почта</p>
-        <p><input class="email-new"></p>
-        <p class="email-text3">Подтвердите Почту</p>
-        <p><input class="email-ver"></p>
-        <button class="confirm-email" type="submit">Изменить Почту</button>
-        <div class="offemail">&#10005;</div>
-        <div class="email-message"></div>
-    </div>
-<script src="/static/js/index.js" defer></script>  
-</body>
+            <div class="form-group">
+                <label for="email">Новая почта</label>
+                <input type="email" id="email" placeholder="Текущая: alex@example.com">
+            </div>
+            <hr class="divider">
+            <div class="form-group">
+                <label for="currentPassword">Текущий пароль <span class="required"></span></label>
+                <input type="password" id="currentPassword" required placeholder="Введите старый пароль">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Новый пароль</label>
+                <input type="password" id="newPassword" placeholder="Минимум 16 символов">
+            </div>
+        <button type="submit" class="save-btn">Сохранить изменения</button>
+    </form>
+<div id="message" class="message-box hidden"></div>
+</div>
+<script src="mainv2.js" defer></script>
+</body>    
 </html>

@@ -32,14 +32,14 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const formData = new FormData();
-        formData.append('login_or_email', login);
+        formData.append('login_or_email', login , email);
         formData.append('password', password);
 
         const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-        login_or_email: login,
+        login_or_email: login , email,
         password: password
     })
 });
