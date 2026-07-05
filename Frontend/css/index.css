@@ -660,7 +660,7 @@ span.flatpickr-weekday {
     display: none;
 } 
 .settings-container.visible{
-    display: block;
+    display: block !important;
 }
 h2 {
     color: #6194e7;

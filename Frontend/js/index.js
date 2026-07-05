@@ -1,14 +1,19 @@
-const request = fetch("http://localhost:8000/register" , {
-    method: "POST", 
-    headers: {'Content-Type': 'applicaton/json'}, 
-    body: JSON.stringify({
-        login: 'username' , 
-        password: 'password', 
-        email: 'email'
-    })
-}) 
-const usetToken = localStorage.getItem(access_token) 
 document.addEventListener("DOMContentLoaded", function() {
+    
+    // Безопасный вызов: .catch не даст скрипту упасть и заблокировать клики
+    fetch("http://localhost:8000/register", {
+        method: "POST", 
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify({
+            login: 'username', 
+            password: 'password', 
+            email: 'test@example.com' // Исправили на валидный формат
+        })
+    })
+    .then(res => res.json())
+    .then(data => console.log("Бэкенд ответил на регистрацию:", data))
+    .catch(err => console.warn("Сервер ругнулся (422/ошибка сети), но кнопки будут работать!", err));
+    // 1. Поиск элементов интерфейса заметок
     const create = document.querySelector('.create');
     const todoContainer = document.querySelector('.todo-container');
     const todoTitle = document.querySelector('.todo-title');
@@ -24,12 +29,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const priorityInput = document.querySelector('.priority-input');
     const priorityOptions = document.querySelectorAll('.select-priority-container > div');
     const dataInput = document.querySelector('.data-input');
+    
+    // Элементы настроек и фильтра
+    const filterBtn = document.querySelector('.filter');
+    const settBtn = document.querySelector('.sett-btn'); 
+    const settCont = document.querySelector('.settings-container'); 
+    const settingsForm = document.getElementById('settingsForm'); // Было пропущено!
+
     let selectedPriority = null; 
     let selectedDate = "";     
     const originalPriorityHTML = priorityInput ? priorityInput.innerHTML : '';
     const originalDataHTML = dataInput ? dataInput.innerHTML : '';
 
-    if (dataInput) {
+    // 2. Инициализация Flatpickr
+    if (dataInput && typeof flatpickr !== 'undefined') {
         flatpickr(dataInput, {
             enableTime: true,           
             dateFormat: "d.m.Y H:i",    
@@ -47,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // 3. Выпадающий список приоритетов
     if (priorityContainer && selectPriorityContainer) {
         priorityContainer.addEventListener('click', function(e) {
             e.stopPropagation(); 
@@ -54,13 +68,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-   
     document.addEventListener('click', function() {
         if (selectPriorityContainer) {
             selectPriorityContainer.classList.remove('visible');
         }
     });
-
 
     priorityOptions.forEach(option => {
         option.addEventListener('click', function(e) {
@@ -73,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 color: color,
                 rawHTML: this.innerHTML
             };
-
           
             if (priorityInput) {
                 priorityInput.innerHTML = selectedPriority.rawHTML;
@@ -83,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 4. Функция сброса формы
     function resetForm() {
         todoTitle.value = "";
         todoDescription.value = "";
@@ -97,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Открытие/закрытие модального окна создания заметки
     if (create) {
         create.addEventListener('click', function() {
             todoContainer.classList.add('visible');
@@ -131,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // 5. Создание новой заметки
     if (addTodo) {
         addTodo.addEventListener('click', function() {
             const titleText = todoTitle.value.trim();
@@ -180,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const checkbox = smallNote.querySelector('.note-checkbox');
             const deleteBtn = smallNote.querySelector('.delete-btn');
             const editBtn = smallNote.querySelector('.edit-btn');
-            const noteDescriptionEl = smallNote.querySelector('.small-note-desc'); // Находим именно элемент описания
+            const noteDescriptionEl = smallNote.querySelector('.small-note-desc');
 
             checkbox.addEventListener('change', function() {
                 if (checkbox.checked) {
@@ -189,13 +203,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     smallNote.classList.remove('completed');
                 }
             });
+
             deleteBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 smallNote.remove();
             });
+
             editBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                
                 resetForm(); 
 
                 todoTitle.value = titleText;
@@ -217,150 +232,127 @@ document.addEventListener("DOMContentLoaded", function() {
                     selectedPriority = savedPriority;
                     if (priorityInput) {
                         priorityInput.innerHTML = savedPriority.rawHTML;
-                        priorityInput.style.color = '#ecf1fb'
+                        priorityInput.style.color = '#ecf1fb';
                     }
                 }
-                todoContainer.classList.add('visible')
-                smallNote.remove()
-            })
+                todoContainer.classList.add('visible');
+                smallNote.remove();
+            });
+
             if (noteDescriptionEl) {
                 noteDescriptionEl.addEventListener('click', function(e) {
-                    e.stopPropagation()
-                    const modalOverlay = document.createElement('div')
-                    modalOverlay.classList.add('desc-modal-overlay')
+                    e.stopPropagation();
+                    const modalOverlay = document.createElement('div');
+                    modalOverlay.classList.add('desc-modal-overlay');
 
                     modalOverlay.innerHTML = `
                         <div class="desc-modal-content">
                             <div class="desc-modal-scroll">${descText || "Описание отсутствует."}</div>
                             <button class="desc-modal-close">Закрыть</button>
                         </div>
-                    `
-                    document.body.appendChild(modalOverlay)
+                    `;
+                    document.body.appendChild(modalOverlay);
+                    
                     modalOverlay.querySelector('.desc-modal-close').addEventListener('click', function() {
-                        modalOverlay.remove()
-                    })
+                        modalOverlay.remove();
+                    });
                     modalOverlay.addEventListener('click', function(evt) {
                         if (evt.target === modalOverlay) {
-                            modalOverlay.remove()
+                            modalOverlay.remove();
                         }
-                    })
-                })
+                    });
+                });
             }
 
             if (notesList) {
-                notesList.appendChild(smallNote)
+                notesList.appendChild(smallNote);
             }
             resetForm();
-            todoContainer.classList.remove('visible')
-        })
-    }
-    if (noteDescriptionEl) {
-    noteDescriptionEl.addEventListener('click', function(e) {
-        e.stopPropagation()
-        const modalOverlay = document.createElement('div')
-        modalOverlay.classList.add('desc-modal-overlay')
-        modalOverlay.innerHTML = `
-            <div class="desc-modal-content">
-                <div class="desc-modal-scroll">${descText || "Описание отсутствует."}</div>
-                <button class="desc-modal-close">Закрыть</button>
-            </div>
-        `
-        document.body.appendChild(modalOverlay)
-        modalOverlay.querySelector('.desc-modal-close').addEventListener('click', function() {
-            modalOverlay.remove()
-        })
-        modalOverlay.addEventListener('click', function(evt) {
-            if (evt.target === modalOverlay) {
-                modalOverlay.remove()
-            }
-        })
-    })
-}
-})
-const filterBtn = document.querySelector('.filter') 
-filterBtn.addEventListener('click' , function(){
-    const responce = fetch('http://localhost:8000/',{
-        method: 'POST' , 
-        headers: {
-            'Content-Type': 'application/json'
-        } 
-    })
-})
-const settBtn = document.querySelector('.sett-btn') 
-const settCont = document.querySelector('.settings-container') 
-
-settBtn.addEventListener('click' , function(){
-    settCont.classList.toggle('visible')
-})
-settingsForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const msgBox = document.getElementById('message');
-    
-    const usernameInput = document.getElementById('username').value.trim();
-    const emailInput = document.getElementById('email').value.trim();
-    const currentPassword = document.getElementById('currentPassword').value;
-    const newPassword = document.getElementById('newPassword').value;
-
-    const userToken = localStorage.getItem('access_token');
-
-    // Формируем тело запроса строго по схеме из Swagger
-    const requestBody = {};
-
-    // Ключи изменены на new_login и new_email в соответствии с image_75a5a6.png
-    if (usernameInput !== "") requestBody.new_login = usernameInput;
-    if (emailInput !== "") requestBody.new_email = emailInput;
-    
-    // Если ваш бэкенд поддерживает смену пароля в этом же эндпоинте:
-    if (newPassword !== "") requestBody.new_password = newPassword; 
-    // Если для смены данных нужен текущий пароль (проверьте схему/Schema в Swagger):
-    // if (currentPassword !== "") requestBody.current_password = currentPassword;
-
-    if (Object.keys(requestBody).length === 0) {
-        msgBox.textContent = "Заполните хотя бы одно поле для изменения";
-        msgBox.className = "message-box error";
-        msgBox.classList.remove('hidden');
-        return;
-    }
-
-    try {
-        msgBox.textContent = "Сохранение изменений...";
-        msgBox.className = "message-box";
-        msgBox.classList.remove('hidden');
-
-        // Урл и метод PATCH взяты из блока Request URL на image_75a5a6.png
-        const response = await fetch("http://localhost:8000/users/update_profile", {
-            method: "PATCH", 
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json',
-                'Authorization': `Bearer ${userToken}`
-            }, 
-            body: JSON.stringify(requestBody)
+            todoContainer.classList.remove('visible');
         });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            msgBox.textContent = "Изменения успешно сохранены!";
-            msgBox.className = "message-box success";
-            
-            settingsForm.reset();
-            
-            if (usernameInput) document.getElementById('username').placeholder = `Текущий: ${usernameInput}`;
-            if (emailInput) document.getElementById('email').placeholder = `Текущая: ${emailInput}`;
-        } else {
-            msgBox.textContent = result.detail || result.message || "Ошибка при сохранении данных";
-            msgBox.className = "message-box error";
-        }
-
-    } catch (error) {
-        console.error("Ошибка сети:", error);
-        msgBox.textContent = "Не удалось связаться с сервером. Проверьте подключение.";
-        msgBox.className = "message-box error";
     }
 
-    setTimeout(() => {
-        msgBox.classList.add('hidden');
-    }, 4000);
+    // 6. Логика фильтра (теперь отправляет пустой объект {}, чтобы не вызывать ошибку 422)
+    if (filterBtn) {
+        filterBtn.addEventListener('click', function() {
+            fetch('http://localhost:8000/', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(res => res.json())
+            .then(data => console.log("Фильтр применен:", data))
+            .catch(err => console.error("Ошибка фильтрации:", err));
+        });
+    }
+
+    // 7. Переключение видимости настроек
+    if (settBtn && settCont) {
+        settBtn.addEventListener('click', function() {
+            settCont.classList.toggle('visible');
+        });
+    }
+
+    // 8. Отправка формы настроек профиля
+    if (settingsForm) {
+        settingsForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const msgBox = document.getElementById('message');
+            const usernameInput = document.getElementById('username').value.trim();
+            const emailInput = document.getElementById('email').value.trim();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            const requestBody = {};
+            if (usernameInput !== "") requestBody.new_login = usernameInput;
+            if (emailInput !== "") requestBody.new_email = emailInput;
+            if (newPassword !== "") requestBody.new_password = newPassword; 
+
+            if (Object.keys(requestBody).length === 0) {
+                msgBox.textContent = "Заполните хотя бы одно поле для изменения";
+                msgBox.className = "message-box error";
+                msgBox.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                msgBox.textContent = "Сохранение изменений...";
+                msgBox.className = "message-box";
+                msgBox.classList.remove('hidden');
+
+                const response = await fetch("http://localhost:8000/users/update_profile", {
+                    method: "PATCH", 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'accept': 'application/json',
+                        'Authorization': `Bearer ${userToken || ''}`
+                    }, 
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    msgBox.textContent = "Изменения успешно сохранены!";
+                    msgBox.className = "message-box success";
+                    settingsForm.reset();
+                    
+                    if (usernameInput) document.getElementById('username').placeholder = `Текущий: ${usernameInput}`;
+                    if (emailInput) document.getElementById('email').placeholder = `Текущая: ${emailInput}`;
+                } else {
+                    msgBox.textContent = result.detail || result.message || "Ошибка при сохранении данных";
+                    msgBox.className = "message-box error";
+                }
+            } catch (error) {
+                console.error("Ошибка сети:", error);
+                msgBox.textContent = "Не удалось связаться с сервером. Проверьте подключение.";
+                msgBox.className = "message-box error";
+            }
+
+            setTimeout(() => {
+                if(msgBox) msgBox.classList.add('hidden');
+            }, 4000);
+        });
+    }
 });
