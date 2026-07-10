@@ -658,6 +658,7 @@ span.flatpickr-weekday {
     left: 800px;
     box-shadow: 1px 1px 100px 1px;
     display: none;
+    z-index: 99;
 } 
 .settings-container.visible{
     display: block !important;

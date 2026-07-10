@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
-    
+
+    const userToken = localStorage.getItem('access_token')
     // Безопасный вызов: .catch не даст скрипту упасть и заблокировать клики
-    fetch("http://localhost:8000/register", {
-        method: "POST", 
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({
-            login: 'username', 
-            password: 'password', 
-            email: 'test@example.com' // Исправили на валидный формат
+    fetch("/users/me", {
+        method: "GET", 
+        headers: {
+            'Content-Type': 'application/json', 
+            'accept': 'application/json' , 
+            'Authorization': `Bearer ${userToken}`
+        }, 
         })
     })
-    .then(res => res.json())
-    .then(data => console.log("Бэкенд ответил на регистрацию:", data))
-    .catch(err => console.warn("Сервер ругнулся (422/ошибка сети), но кнопки будут работать!", err));
     // 1. Поиск элементов интерфейса заметок
     const create = document.querySelector('.create');
     const todoContainer = document.querySelector('.todo-container');
@@ -256,14 +254,23 @@ document.addEventListener("DOMContentLoaded", function() {
                     modalOverlay.querySelector('.desc-modal-close').addEventListener('click', function() {
                         modalOverlay.remove();
                     });
+                    
                     modalOverlay.addEventListener('click', function(evt) {
                         if (evt.target === modalOverlay) {
                             modalOverlay.remove();
                         }
                     });
+                    fetch('/tasks/create_task' , {
+                method: 'POST' , 
+                headers: {
+                    'Content-Type': 'application/json' , 
+                    'accept': 'application/json' , 
+                    'Authorization': `Bearer ${userToken}`
+                }, 
+                body: JSON.stringify(dataInput , selectPriorityContainer , todoDescription , todoTitle)
+            })
                 });
             }
-
             if (notesList) {
                 notesList.appendChild(smallNote);
             }
@@ -271,18 +278,33 @@ document.addEventListener("DOMContentLoaded", function() {
             todoContainer.classList.remove('visible');
         });
     }
-
+    function getTasks(){
+        fetch('/tasks/{tasks_id}' , {
+            method: 'GET' , 
+            headers: {
+            'Content-Type': 'application/json' ,
+            'accept': 'application/json' , 
+            'Authorization': `Bearer ${userToken}`
+            } , 
+            body: JSON.stringify(smallNote , notesList)
+        })
+    }
     // 6. Логика фильтра (теперь отправляет пустой объект {}, чтобы не вызывать ошибку 422)
     if (filterBtn) {
         filterBtn.addEventListener('click', function() {
-            fetch('http://localhost:8000/', {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
+            fetch('/tasks', {
+                method: 'GET', 
+                headers: { 
+                'Content-Type': 'application/json' , 
+                'accept': 'application/json' ,
+                'Authorization': `Bearer ${userToken}`
+                },
+                body: JSON.stringify(smallNote , notesList , dataInput , todoTitle , todoDescription , selectPriorityContainer)
             })
             .then(res => res.json())
             .then(data => console.log("Фильтр применен:", data))
             .catch(err => console.error("Ошибка фильтрации:", err));
+            console.log(res.json())
         });
     }
 
@@ -302,7 +324,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const usernameInput = document.getElementById('username').value.trim();
             const emailInput = document.getElementById('email').value.trim();
             const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
+            const newPassword = document.getElementById('newPassword').value; 
+            const saveBtn = document.querySelector('.save-btn')
 
             const requestBody = {};
             if (usernameInput !== "") requestBody.new_login = usernameInput;
@@ -321,17 +344,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 msgBox.className = "message-box";
                 msgBox.classList.remove('hidden');
 
-                const response = await fetch("http://localhost:8000/users/update_profile", {
+                const response = await fetch("/users/update_profile", {
                     method: "PATCH", 
                     headers: {
                         'Content-Type': 'application/json',
                         'accept': 'application/json',
-                        'Authorization': `Bearer ${userToken || ''}`
+                        'Authorization': `Bearer ${userToken}`
                     }, 
-                    body: JSON.stringify(requestBody)
-                });
-
-                const result = await response.json();
+                    body: JSON.stringify(usernameInput , emailInput , saveBtn)
+                })  
+                fetch('/users/update_passwords' , {
+                    headers: {
+                        'Content-Type': 'application/json' , 
+                        'accept': 'application/json' ,
+                        'Authorization': `Bearer ${userToken}`
+                    } , 
+                    body: JSON.stringify(currentPassword , newPassword , saveBtn)
+                })
 
                 if (response.ok) {
                     msgBox.textContent = "Изменения успешно сохранены!";
@@ -355,4 +384,3 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 4000);
         });
     }
-});
