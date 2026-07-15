@@ -1,13 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    const userToken = localStorage.getItem('access_token')
-    // Безопасный вызов: .catch не даст скрипту упасть и заблокировать клики
+    const token = localStorage.getItem('usertoken')
     fetch("/users/me", {
         method: "GET", 
         headers: {
             'Content-Type': 'application/json', 
             'accept': 'application/json' , 
-            'Authorization': `Bearer ${userToken}`
+            'Authorization': `Bearer ${token}`
         }, 
         })
     })
@@ -265,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     'Content-Type': 'application/json' , 
                     'accept': 'application/json' , 
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${token}`
                 }, 
                 body: JSON.stringify(dataInput , selectPriorityContainer , todoDescription , todoTitle)
             })
@@ -284,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function() {
             headers: {
             'Content-Type': 'application/json' ,
             'accept': 'application/json' , 
-            'Authorization': `Bearer ${userToken}`
+            'Authorization': `Bearer ${token}`
             } , 
             body: JSON.stringify(smallNote , notesList)
         })
@@ -297,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: { 
                 'Content-Type': 'application/json' , 
                 'accept': 'application/json' ,
-                'Authorization': `Bearer ${userToken}`
+                'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(smallNote , notesList , dataInput , todoTitle , todoDescription , selectPriorityContainer)
             })
@@ -349,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     headers: {
                         'Content-Type': 'application/json',
                         'accept': 'application/json',
-                        'Authorization': `Bearer ${userToken}`
+                        'Authorization': `Bearer ${token}`
                     }, 
                     body: JSON.stringify(usernameInput , emailInput , saveBtn)
                 })  
@@ -357,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     headers: {
                         'Content-Type': 'application/json' , 
                         'accept': 'application/json' ,
-                        'Authorization': `Bearer ${userToken}`
+                        'Authorization': `Bearer ${token}`
                     } , 
                     body: JSON.stringify(currentPassword , newPassword , saveBtn)
                 })

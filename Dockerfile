@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM dockerhub.timeweb.cloud/library/python:3.13-slim
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt

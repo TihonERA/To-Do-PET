@@ -65,9 +65,6 @@ console.log('3')
     submitBtn.disabled = false;
     return;
   }
-  if (response.status || response.textContent == 'userToken is not defined'){
-    submitBtn.disabled = false
-  }
 console.log('4')
   try {
     const token = await userDate(email, login, password);
@@ -76,7 +73,11 @@ console.log('4')
     
     window.location.href = 'http://localhost:8000/';
   } catch (err) {
-    showError(err.message || 'Произошла ошибка при регистрации' || 'userToken is not defined');
+    showError(err.message || 'Произошла ошибка при регистрации');
     submitBtn.disabled = false;
+  }
+  if(err.message == 'userToken is not defined'){
+    submitBtn.disabled = false 
+    window.location.href = 'http://localhost:8000/'
   }
 });
