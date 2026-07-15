@@ -32,22 +32,25 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const formData = new FormData();
-        formData.append('login_or_email', login , email);
+        formData.append('login_or_email', login || email);
         formData.append('password', password);
 
         const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+             'Content-Type': 'application/json' , 
+             'accept': 'application/json'
+        },
         body: JSON.stringify({
-        login_or_email: login , email,
+        login_or_email: login ,
         password: password
     })
 });
-
         const data = await response.json();
+        localStorage.setItem('usertoken', data.access_token);
 
         if (response.ok) {
-            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('usertoken', data.access_token);
             window.location.href = 'http://localhost:8000/';
         } else {
             errorDiv.textContent = data.detail || 'Неверный логин или пароль';

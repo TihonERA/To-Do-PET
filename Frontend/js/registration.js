@@ -14,12 +14,15 @@ function clearError() {
   errorDiv.textContent = '';
   errorDiv.style.display = 'none';
 }
-
+console.log('1')
 async function userDate(email, login, password) {
   const response = await fetch('http://localhost:8000/register', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, login, password })
+    headers: {
+       'Content-Type': 'application/json' , 
+       'accept': 'application/json'
+      },
+    body: JSON.stringify({ email, login, password})
   });
 
   if (!response.ok) {
@@ -27,12 +30,11 @@ async function userDate(email, login, password) {
     const detail = errorData.detail || `Ошибка ${response.status}: ${response.statusText}`;
     throw new Error(detail);
   }
-
   const data = await response.json();
+  console.log(data);
   return data.access_token;
-  localStorage(access_token)
 }
-
+console.log('2')
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   clearError();
@@ -42,7 +44,7 @@ form.addEventListener('submit', async (e) => {
   const login = loginInput.value.trim();
   const password = passInput.value;
   const confirm = confirmInput.value;
-
+console.log('3')
   if (!email || !login || !password || !confirm) {
     showError('Заполните все поля');
     submitBtn.disabled = false;
@@ -63,13 +65,18 @@ form.addEventListener('submit', async (e) => {
     submitBtn.disabled = false;
     return;
   }
-
+  if (response.status || response.textContent == 'userToken is not defined'){
+    submitBtn.disabled = false
+  }
+console.log('4')
   try {
     const token = await userDate(email, login, password);
     localStorage.setItem('usertoken', token);
+    console.log('Проверка')
+    
     window.location.href = 'http://localhost:8000/';
   } catch (err) {
-    showError(err.message || 'Произошла ошибка при регистрации');
+    showError(err.message || 'Произошла ошибка при регистрации' || 'userToken is not defined');
     submitBtn.disabled = false;
   }
 });
