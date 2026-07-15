@@ -20,9 +20,11 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "alembic -c /code/backend/alembic.ini upgrade head && uvicorn backend.main:app --host 0.0.0.0 --port 8000"
+      sh -c "alembic -c /code/backend/alembic.ini upgrade head && uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /code"
     ports:
       - "8000:8000"
+    volumes:
+      - .:/code
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -34,3 +36,5 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
 volumes:
   db-data:
+
+  
