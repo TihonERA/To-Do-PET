@@ -1,16 +1,26 @@
-document.addEventListener("DOMContentLoaded", function() {
+window.token = localStorage.getItem('usertoken')
+document.addEventListener("DOMContentLoaded", async function() {
+    ;(async () => {
+    try {
+        const user = await fetch("/users/me", {
+            method: "GET", 
+            headers: {
+                'Content-Type': 'application/json', 
+                'accept': 'application/json', 
+                'Authorization': `Bearer ${window.token}`
+            }
+        });
 
-    const token = localStorage.getItem('usertoken')
-    fetch("/users/me", {
-        method: "GET", 
-        headers: {
-            'Content-Type': 'application/json', 
-            'accept': 'application/json' , 
-            'Authorization': `Bearer ${token}`
-        }, 
-        })
-    })
-    // 1. Поиск элементов интерфейса заметок
+        if (user.status === 404) {
+            window.location.href = 'http://localhost:8000/registration';
+        }
+        if (user.status === 401){
+            window.location.href = 'http://localhost:8000/registration'
+    }} catch (error) {
+        console.error(error);
+    }
+})()
+})
     const create = document.querySelector('.create');
     const todoContainer = document.querySelector('.todo-container');
     const todoTitle = document.querySelector('.todo-title');
@@ -27,18 +37,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const priorityOptions = document.querySelectorAll('.select-priority-container > div');
     const dataInput = document.querySelector('.data-input');
     
-    // Элементы настроек и фильтра
     const filterBtn = document.querySelector('.filter');
     const settBtn = document.querySelector('.sett-btn'); 
     const settCont = document.querySelector('.settings-container'); 
-    const settingsForm = document.getElementById('settingsForm'); // Было пропущено!
+    const settingsForm = document.getElementById('settingsForm'); 
 
     let selectedPriority = null; 
     let selectedDate = "";     
     const originalPriorityHTML = priorityInput ? priorityInput.innerHTML : '';
     const originalDataHTML = dataInput ? dataInput.innerHTML : '';
 
-    // 2. Инициализация Flatpickr
     if (dataInput && typeof flatpickr !== 'undefined') {
         flatpickr(dataInput, {
             enableTime: true,           
@@ -57,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 3. Выпадающий список приоритетов
     if (priorityContainer && selectPriorityContainer) {
         priorityContainer.addEventListener('click', function(e) {
             e.stopPropagation(); 
@@ -91,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 4. Функция сброса формы
     function resetForm() {
         todoTitle.value = "";
         todoDescription.value = "";
@@ -106,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Открытие/закрытие модального окна создания заметки
     if (create) {
         create.addEventListener('click', function() {
             todoContainer.classList.add('visible');
@@ -141,7 +146,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 5. Создание новой заметки
     if (addTodo) {
         addTodo.addEventListener('click', function() {
             const titleText = todoTitle.value.trim();
@@ -245,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     modalOverlay.innerHTML = `
                         <div class="desc-modal-content">
                             <div class="desc-modal-scroll">${descText || "Описание отсутствует."}</div>
-                            <button class="desc-modal-close">Закрыть</button>
+                            <button classusertoken="desc-modal-close">Закрыть</button>
                         </div>
                     `;
                     document.body.appendChild(modalOverlay);
@@ -264,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     'Content-Type': 'application/json' , 
                     'accept': 'application/json' , 
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${window.token}`
                 }, 
                 body: JSON.stringify(dataInput , selectPriorityContainer , todoDescription , todoTitle)
             })
@@ -283,12 +287,10 @@ document.addEventListener("DOMContentLoaded", function() {
             headers: {
             'Content-Type': 'application/json' ,
             'accept': 'application/json' , 
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${window.token}`
             } , 
-            body: JSON.stringify(smallNote , notesList)
         })
     }
-    // 6. Логика фильтра (теперь отправляет пустой объект {}, чтобы не вызывать ошибку 422)
     if (filterBtn) {
         filterBtn.addEventListener('click', function() {
             fetch('/tasks', {
@@ -296,25 +298,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: { 
                 'Content-Type': 'application/json' , 
                 'accept': 'application/json' ,
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${window.token}`
                 },
-                body: JSON.stringify(smallNote , notesList , dataInput , todoTitle , todoDescription , selectPriorityContainer)
             })
             .then(res => res.json())
             .then(data => console.log("Фильтр применен:", data))
             .catch(err => console.error("Ошибка фильтрации:", err));
-            console.log(res.json())
         });
     }
-
-    // 7. Переключение видимости настроек
     if (settBtn && settCont) {
         settBtn.addEventListener('click', function() {
             settCont.classList.toggle('visible');
         });
     }
-
-    // 8. Отправка формы настроек профиля
     if (settingsForm) {
         settingsForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -325,12 +321,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value; 
             const saveBtn = document.querySelector('.save-btn')
-
             const requestBody = {};
+
             if (usernameInput !== "") requestBody.new_login = usernameInput;
             if (emailInput !== "") requestBody.new_email = emailInput;
             if (newPassword !== "") requestBody.new_password = newPassword; 
-
             if (Object.keys(requestBody).length === 0) {
                 msgBox.textContent = "Заполните хотя бы одно поле для изменения";
                 msgBox.className = "message-box error";
@@ -348,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     headers: {
                         'Content-Type': 'application/json',
                         'accept': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${window.token}`
                     }, 
                     body: JSON.stringify(usernameInput , emailInput , saveBtn)
                 })  
@@ -356,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     headers: {
                         'Content-Type': 'application/json' , 
                         'accept': 'application/json' ,
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${window.token}`
                     } , 
                     body: JSON.stringify(currentPassword , newPassword , saveBtn)
                 })
@@ -365,6 +360,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     msgBox.textContent = "Изменения успешно сохранены!";
                     msgBox.className = "message-box success";
                     settingsForm.reset();
+
+                if (response.status == 401){
+                    localStorage.removeItem('usertoken')
+                    window.location.href = 'http://localhost:8000/registration' 
+                    return
+                }
                     
                     if (usernameInput) document.getElementById('username').placeholder = `Текущий: ${usernameInput}`;
                     if (emailInput) document.getElementById('email').placeholder = `Текущая: ${emailInput}`;

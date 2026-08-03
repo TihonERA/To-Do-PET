@@ -73,11 +73,7 @@ console.log('4')
     
     window.location.href = 'http://localhost:8000/';
   } catch (err) {
-    showError(err.message || 'Произошла ошибка при регистрации');
-    submitBtn.disabled = false;
-  }
-  if(err.message == 'userToken is not defined'){
+    showError(err.message || 'Произошла ошибка при регистрации'||'userToken is not defined');
     submitBtn.disabled = false 
-    window.location.href = 'http://localhost:8000/'
   }
-});
+  })

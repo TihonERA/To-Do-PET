@@ -2,8 +2,6 @@ const form = document.querySelector('.form-box form');
 const loginInput = document.querySelector('.login');
 const passwordInput = document.querySelector('.pass');
 const submitBtn = document.querySelector('button');
-
-// Создаём errorDiv один раз
 let errorDiv = document.querySelector('.login-error');
 if (!errorDiv) {
     errorDiv = document.createElement('div');

@@ -6,4 +6,7 @@
 .Python
 *.db
 *.sqlite3
-.vscode
+.vscodenode_modules/
+package-lock.json
+.eslintcache
+Frontend/node_modules/
