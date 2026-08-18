@@ -363,7 +363,7 @@ span.flatpickr-weekday {
 }
 .close-war-container::before {
     content: '';
-    position: fixed; 
+    position: relative; 
     top: 0;
     left: 0;
     width: 100vw;
@@ -623,7 +623,7 @@ span.flatpickr-weekday {
     background: #4a80d6 !important;
 }
 .filter{
-    position: relative; 
+    position: relative !important; 
     top: 180px;
     padding-left: 13px;
     user-select: none;
@@ -647,19 +647,22 @@ span.flatpickr-weekday {
     border-radius: 5px;
 }
 .settings-container {
-    background:#181920;
+    background: #181920;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     width: 100%;
     max-width: 400px;
-    position: absolute; 
-    bottom: 300px; 
-    left: 800px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     box-shadow: 1px 1px 100px 1px;
     display: none;
     z-index: 99;
-} 
+    max-height: 90vh;
+    overflow-y: auto;
+}
 .settings-container.visible{
     display: block !important;
 }
@@ -755,4 +758,93 @@ input:focus {
 .sett-btn:hover{
     background: #ededed12;
     border-radius: 5px;
+}
+.filter-dropdown {
+    display: none !important;
+    position: absolute !important;
+    left: 13px !important;
+    top: 100% !important; /* Меняем с 45px на 100% - будет сразу под кнопкой */
+    margin-top: 5px !important; /* Небольшой отступ */
+    min-width: 200px !important;
+    width: max-content !important;
+    background: #2b2b36 !important;
+    border: 1px solid #444454 !important;
+    border-radius: 8px !important;
+    padding: 6px 0 !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6) !important;
+    list-style: none !important;
+}
+
+/* Показываем меню */
+.filter-dropdown.show {
+    display: block !important;
+}
+
+/* ===== ПУНКТЫ МЕНЮ ===== */
+.filter-item-time,
+.filter-item-priority {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 20px !important;
+    color: #ecf1fb !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    text-align: left !important;
+    transition: background 0.2s ease, color 0.2s ease !important;
+    white-space: nowrap !important;
+    font-family: 'Twemoji Country Flags', -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", system-ui, sans-serif !important;
+    border: none !important;
+    background: transparent !important;
+    user-select: none !important;
+}
+
+/* Разделитель между пунктами */
+.filter-item-time {
+    border-bottom: 1px solid #444454 !important;
+}
+
+/* Ховер эффект */
+.filter-item-time:hover,
+.filter-item-priority:hover {
+    background: #3f3f50 !important;
+    color: #6194e7 !important;
+}
+
+/* Иконки в пунктах меню */
+.filter-item-time svg,
+.filter-item-priority svg {
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    stroke: #ecf1fb !important;
+    transition: stroke 0.2s ease !important;
+}
+
+.filter-item-time:hover svg,
+.filter-item-priority:hover svg {
+    stroke: #6194e7 !important;
+}
+
+/* Убедитесь, что родительский контейнер имеет position: relative */
+.filter-container {
+    position: relative !important;
+}
+@media (max-width: 768px) {
+    .settings-container {
+        width: 90%;
+        max-width: 350px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-container {
+        width: 95%;
+        max-width: 300px;
+        padding: 15px;
+    }
 }

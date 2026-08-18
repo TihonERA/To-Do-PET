@@ -281,31 +281,6 @@ document.addEventListener("DOMContentLoaded", async function() {
             todoContainer.classList.remove('visible');
         });
     }
-    function getTasks(){
-        fetch('/tasks/{tasks_id}' , {
-            method: 'GET' , 
-            headers: {
-            'Content-Type': 'application/json' ,
-            'accept': 'application/json' , 
-            'Authorization': `Bearer ${window.token}`
-            } , 
-        })
-    }
-    if (filterBtn) {
-        filterBtn.addEventListener('click', function() {
-            fetch('/tasks', {
-                method: 'GET', 
-                headers: { 
-                'Content-Type': 'application/json' , 
-                'accept': 'application/json' ,
-                'Authorization': `Bearer ${window.token}`
-                },
-            })
-            .then(res => res.json())
-            .then(data => console.log("Фильтр применен:", data))
-            .catch(err => console.error("Ошибка фильтрации:", err));
-        });
-    }
     if (settBtn && settCont) {
         settBtn.addEventListener('click', function() {
             settCont.classList.toggle('visible');
@@ -384,3 +359,20 @@ document.addEventListener("DOMContentLoaded", async function() {
             }, 4000);
         });
     }
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterContainer = document.querySelector('.filter-container');
+    const filterDropdown = document.querySelector('.filter-dropdown');
+    
+    if (filterContainer && filterDropdown) {
+        filterContainer.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filterDropdown.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!filterContainer.contains(e.target) && !filterDropdown.contains(e.target)) {
+                filterDropdown.classList.remove('show');
+            }
+        });
+      }
+  });
